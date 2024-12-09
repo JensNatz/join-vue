@@ -2,21 +2,18 @@
     <div class="contacts-list">
         <div v-for="(contacts, letter) in sortedContacts" :key="letter">
             <div v-if="contacts.length > 0">
-                <h2>{{ letter }}</h2>
-                <ul>
-                    <li v-for="contact in contacts" :key="contact.email">
-                        <p><strong>Name:</strong> {{ contact.name }}</p>
-                        <p><strong>Email:</strong> {{ contact.email }}</p>
-                        <p><strong>Phone:</strong> {{ contact.phone }}</p>
-                        <p><strong>Color Code:</strong> {{ contact.colorcode }}</p>
-                    </li>
-                </ul>
+                <AplhabeticalHeader :letter="letter" />
+                <div v-for="contact in contacts" :key="contact.email">
+                    <ContactEntry :contact="contact" />
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script setup>
 import { loadFromDatabase } from '../../services/databaseService';
+import AplhabeticalHeader from '../molecules/AplhabeticalHeader.vue';
+import ContactEntry from '../molecules/ContactEntry.vue';
 import { ref } from 'vue';
 
 const contacts = ref([]);
@@ -39,13 +36,14 @@ function sortContactsByAlphabet(contacts, alphabet) {
         result[letter] = [];
     });
 
-    Object.values(contacts).forEach(contact => {
+    Object.entries(contacts).forEach(([id, contact]) => {
         let firstLetter = contact.name[0].toUpperCase();
         if (firstLetter === "Ä") firstLetter = "A";
         else if (firstLetter === "Ö") firstLetter = "O";
         else if (firstLetter === "Ü") firstLetter = "U";
 
         if (result[firstLetter]) {
+            contact.id = id;
             result[firstLetter].push(contact);
         }
     });
@@ -66,7 +64,8 @@ function sortContactsByAlphabet(contacts, alphabet) {
 .contacts-list {
     width: 320px;
     height: 100%;
+    overflow-y: auto;
     box-shadow: 4px 0px 6px 0px rgba($basic-black, 0.1);
-    padding: 24px;
+    padding: 32px 24px;
 }
 </style>
