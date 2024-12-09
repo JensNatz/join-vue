@@ -1,4 +1,5 @@
 <script setup>
+import StaticTemplate from '../components/templates/StaticTemplate.vue'
 </script>
 
 <template>
