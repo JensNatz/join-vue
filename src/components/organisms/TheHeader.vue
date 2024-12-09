@@ -12,6 +12,7 @@ import IconLogoWhite from '../icons/IconLogoWhite.vue'
 <style lang="scss">
 .the-header {
     background-color: $primary-color;
+    box-shadow: 0px 4px 4px 0px rgba($basic-black, 0.1);
     color: $basic-white;
     @include flex($justify: space-between);
     width: 100%;

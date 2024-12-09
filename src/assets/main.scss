@@ -1,0 +1,28 @@
+@import './base.scss';
+@import './fonts.scss';
+
+h1 {
+    font-weight: 700;
+    font-size: 56px;
+}
+
+h2 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: $primary-color;
+}
+
+p {
+    margin: 12px 0;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: $basic-dark;
+
+    &:hover {
+        color: $primary-color;
+    }
+}

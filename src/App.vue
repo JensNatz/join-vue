@@ -9,7 +9,10 @@ import NavBar from '@/components/organisms/NavBar.vue'
     <TheHeader />
     <div class="app-content">
       <NavBar />
-      <RouterView class="router" />
+      <div class="page-content">
+        <RouterView class="router" />
+      </div>
+
     </div>
   </div>
 </template>
@@ -24,9 +27,14 @@ import NavBar from '@/components/organisms/NavBar.vue'
   flex: 1;
   width: 100%;
   @include flex($align: flex-start);
+  overflow: hidden;
 
-  .router {
+  .page-content {
     width: 100%;
+    height: 100%;
+    overflow-y: scroll;
   }
+
+
 }
 </style>

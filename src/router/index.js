@@ -1,21 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import ImprintView from '../views/ImprintView.vue'
+import ContactsView from '../views/ContactsView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      alias: '/imprint',
       name: 'imprint',
       component: ImprintView,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/contacts',
+      name: 'contacts',
+      component: ContactsView,
     }
     
   ],

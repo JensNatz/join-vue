@@ -1,19 +1,31 @@
 <template>
-    <div class="nav-link">
+    <router-link class="nav-link" :to="to">
+        <component :is="icon" />
         {{ title }}
-    </div>
+    </router-link>
 </template>
+
 <script setup>
 const props = defineProps({
     title: {
         type: String,
         required: true
+    },
+    icon: {
+        type: Object,
+        required: true
+    },
+    to: {
+        type: [String, Object],
+        required: true
     }
 })
 </script>
+
 <style lang="scss">
 .nav-link {
-    @include flex();
+    @include flex($justify: start);
+    gap: 8px;
     width: 186px;
     height: 40px;
     padding: 8px 32px;
@@ -22,6 +34,7 @@ const props = defineProps({
     cursor: pointer;
 
     &:hover {
+        color: inherit;
         background-color: $primary-color-light;
     }
 }

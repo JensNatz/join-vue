@@ -1,0 +1,20 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: $basic-dark;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: 'Open Sans', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

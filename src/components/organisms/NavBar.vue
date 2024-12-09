@@ -1,17 +1,21 @@
 <template>
     <nav class="navbar">
         <div class="navbar-links">
-            <NavLink title="Summary" />
-            <NavLink title="Board" />
-            <NavLink title="Contacts" />
+            <NavLink title="Summary" :icon="IconSummary" to="/summary" />
+            <NavLink title="Board" :icon="IconBoard" to="/board" />
+            <NavLink title="Contacts" :icon="IconContacts" to="/contacts" />
         </div>
-        <div>
-            Footer Links 1 und 2
+        <div class="metalinks">
+            <router-link to="/privacy-policy">Privacy Policy</router-link>
+            <router-link to="/imprint">Imprint</router-link>
         </div>
     </nav>
 </template>
 <script setup>
 import NavLink from '../molecules/NavLink.vue'
+import IconSummary from '../icons/IconSummary.vue'
+import IconBoard from '../icons/IconBoard.vue'
+import IconContacts from '../icons/IconContacts.vue'
 </script>
 <style lang="scss">
 .navbar {
@@ -20,5 +24,15 @@ import NavLink from '../molecules/NavLink.vue'
     width: 232px;
     height: 100%;
     padding: 66px 24px;
+
+
+
+    .metalinks,
+    .navbar-links {
+        @include flex($direction: column);
+        gap: 8px
+    }
+
+
 }
 </style>

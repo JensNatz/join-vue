@@ -1,11 +1,58 @@
-<script setup>
-import StaticTemplate from '../components/templates/StaticTemplate.vue'
-</script>
-
 <template>
   <main>
-    <h1>Impressum</h1>
     <StaticTemplate>
+      <template #heading>Impressum</template>
+      <template #content>
+        <h2>Responsible for the content according to § 5 TMG</h2>
+        <p>
+          Jens Natzschka <br>
+          Burloer Str. 30 <br>
+          46325 Borken <br>
+          Deutschland <br>
+        </p>
+        <h2>Acceptance of terms</h2>
+        <p>
+          By accessing and using <a href="index.html">Join</a> (Product), you acknowledge and agree to the following
+          terms and conditions,
+          and any policies, guidelines, or amendments thereto that may be presented to you from time to time.
+          We, the listed students, may update or change the terms and conditions from time to time without notice.
+        </p>
+        <h2>Scope and ownership of the product</h2>
+        <p>
+          <a href="index.html">Join</a> has been developed as part of a student group project in a web development
+          bootcamp at the Developer Akademie GmbH. It has an educational purpose and is not intended for extensive
+          personal & business usage. As such, we cannot guarantee consistent availability, reliability, accuracy, or any
+          other aspect of quality regarding this Product.
+          The design of <a href="index.html">Join</a> is owned by the Developer Akademie GmbH. Unauthorized use,
+          reproduction, modification, distribution, or replication of the design is strictly prohibited.
+        </p>
+        <h2>Proprietary rights</h2>
+        <p>
+          Aside from the design owned by Developer Akademie GmbH, we, the listed students, retain all proprietary rights
+          in <a href="index.html">Join</a>, including any associated copyrighted material, trademarks, and other
+          proprietary information.
+        </p>
+        <h2>Use of the product</h2>
+        <p>
+          <a href="index.html">Join</a> is intended to be used for lawful purposes only, in accordance with all
+          applicable laws and regulations. Any use of <a href="index.html">Join</a> for illegal activities, or to
+          harass, harm, threaten, or intimidate another person, is strictly prohibited. You are solely responsible for
+          your interactions with other users of <a href="index.html">Join</a>.
+        </p>
+        <h2>Disclaimer of warranties and limitation of liability</h2>
+        <p>
+          <a href="index.html">Join</a> is provided "as is" without warranty of any kind, whether express or implied,
+          including but not limited to the implied warranties of merchantability, fitness for a particular purpose, and
+          non-infringement. In no event will we, the listed students, or the Developer Akademie, be liable for any
+          direct, indirect, incidental, special, consequential or exemplary damages, including but not limited to,
+          damages for loss of profits, goodwill, use, data, or other intangible losses, even if we have been advised of
+          the possibility of such damages, arising out of or in connection with the use or performance of <a
+            href="index.html">Join</a>.
+        </p>
+      </template>
     </StaticTemplate>
   </main>
 </template>
+<script setup>
+import StaticTemplate from '../components/templates/StaticTemplate.vue'
+</script>
