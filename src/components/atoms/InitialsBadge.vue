@@ -30,7 +30,7 @@ const initials = computed(() => {
 });
 
 const badgeColor = computed(() => {
-    return `color-${props.colorCode}`;
+    return `color-${props.colorCode + 1}`;
 });
 
 </script>

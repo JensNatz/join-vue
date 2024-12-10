@@ -51,21 +51,14 @@ function sortContactsByAlphabet(contacts, alphabet) {
     Object.keys(result).forEach(letter => {
         result[letter].sort((a, b) => a.name.localeCompare(b.name));
     });
-
     sortedContacts.value = result;
-    console.log(sortedContacts.value);
 }
-
-
-
-
 </script>
 <style lang="scss">
 .contacts-list {
-    width: 320px;
+    width: 100%;
     height: 100%;
     overflow-y: auto;
-    box-shadow: 4px 0px 6px 0px rgba($basic-black, 0.1);
-    padding: 32px 24px;
+    padding: 0 8px;
 }
 </style>
