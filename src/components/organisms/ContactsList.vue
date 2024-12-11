@@ -1,8 +1,8 @@
 <template>
     <div class="contacts-list">
-        <div v-for="(contacts, letter) in sortedContacts" :key="letter">
+        <div v-for="(contacts, letter) in contacts" :key="letter">
             <div v-if="contacts.length > 0">
-                <AplhabeticalHeader :letter="letter" />
+                <AlphabeticalHeader :letter="letter" />
                 <div v-for="contact in contacts" :key="contact.email">
                     <ContactEntry :contact="contact" />
                 </div>
@@ -11,22 +11,27 @@
     </div>
 </template>
 <script setup>
+import { ref, onBeforeMount } from 'vue';
+import { useContactStore } from '@/stores/contact';
 import { loadFromDatabase } from '../../services/databaseService';
-import AplhabeticalHeader from '../molecules/AplhabeticalHeader.vue';
+import AlphabeticalHeader from '../molecules/AlphabeticalHeader.vue';
 import ContactEntry from '../molecules/ContactEntry.vue';
-import { ref } from 'vue';
+
 
 const contacts = ref([]);
-const sortedContacts = ref([]);
 const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
 async function getContactsFromDatabase() {
     let contactsFromDatabase = await loadFromDatabase("contacts");
-    contacts.value = contactsFromDatabase;
+    return contactsFromDatabase;
 }
 
-getContactsFromDatabase().then(() => {
-    sortContactsByAlphabet(contacts.value, alphabet);
+onBeforeMount(async () => {
+    const contactStore = useContactStore();
+    const contactsFromDatabase = await getContactsFromDatabase();
+    const sortedContacts = sortContactsByAlphabet(contactsFromDatabase, alphabet);
+    contactStore.setSortedContacts(sortedContacts);
+    contacts.value = contactStore.sortedContacts;
 });
 
 function sortContactsByAlphabet(contacts, alphabet) {
@@ -51,7 +56,7 @@ function sortContactsByAlphabet(contacts, alphabet) {
     Object.keys(result).forEach(letter => {
         result[letter].sort((a, b) => a.name.localeCompare(b.name));
     });
-    sortedContacts.value = result;
+    return result;
 }
 </script>
 <style lang="scss">

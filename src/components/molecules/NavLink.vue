@@ -25,7 +25,7 @@ const props = defineProps({
 <style lang="scss">
 .nav-link {
     @include flex($justify: start);
-    gap: 8px;
+    gap: 16px;
     width: 186px;
     height: 40px;
     padding: 8px 32px;

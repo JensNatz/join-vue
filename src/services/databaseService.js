@@ -16,7 +16,8 @@ export async function postToDatabase(path, data) {
         },
         body: JSON.stringify(data),
     });
-    return responseToJson = await response.json();
+    let responseToJson = await response.json();
+    return responseToJson;
 }
 
 export async function updateOnDatabase(path, data) {
@@ -27,7 +28,8 @@ export async function updateOnDatabase(path, data) {
         },
         body: JSON.stringify(data),
     });
-    return responseToJson = await response.json();
+    let responseToJson = await response.json();
+    return responseToJson;
 }
 
 
@@ -35,5 +37,6 @@ export async function deleteFromDatabase(path) {
     let response = await fetch(FIREBASE_URL + path + ".json", {
         method: "DELETE",
     });
-    return responseToJson = await response.json();
+    let responseToJson = await response.json();
+    return responseToJson;
 }

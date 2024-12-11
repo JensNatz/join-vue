@@ -7,6 +7,11 @@
   scroll-behavior: smooth;
 }
 
+input {
+  border: none;
+  outline: none;
+}
+
 body {
   min-height: 100vh;
   color: $basic-dark;

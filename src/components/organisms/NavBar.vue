@@ -1,12 +1,12 @@
 <template>
     <nav class="navbar">
         <div class="navbar-links">
-            <NavLink title="Summary" :icon="IconSummary" to="/summary" />
-            <NavLink title="Board" :icon="IconBoard" to="/board" />
+            <NavLink title="Summary" :icon="IconSummary" to="/" />
+            <NavLink title="Board" :icon="IconBoard" to="/" />
             <NavLink title="Contacts" :icon="IconContacts" to="/contacts" />
         </div>
         <div class="metalinks">
-            <router-link to="/privacy-policy">Privacy Policy</router-link>
+            <router-link to="/">Privacy Policy</router-link>
             <router-link to="/imprint">Imprint</router-link>
         </div>
     </nav>

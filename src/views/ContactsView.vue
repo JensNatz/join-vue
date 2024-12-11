@@ -1,23 +1,37 @@
 <template>
   <div class="contacts-view">
     <div class="contacts-list-container">
-      <TheButton>Add new contact
+      <TheButton @click="onAddContactClick">Add new contact
         <template #icon>
           <IconAddContact />
         </template>
       </TheButton>
       <ContactsList />
     </div>
-    <div class="router-view">
-      <router-view></router-view>
+    <div v-if="contactStore.currentContactId" class="contact-details-container">
+      <ContactDetails />
     </div>
   </div>
 </template>
 <script setup>
-import { RouterView } from 'vue-router'
 import ContactsList from '../components/organisms/ContactsList.vue'
+import ContactDetails from '../components/organisms/ContactDetails.vue';
 import TheButton from '../components/atoms/TheButton.vue';
 import IconAddContact from '../components/icons/IconAddContact.vue';
+import { postToDatabase } from '../services/databaseService';
+import { useContactStore } from '@/stores/contact';
+
+const contactStore = useContactStore();
+
+const onAddContactClick = () => {
+  postToDatabase('contacts', {
+    name: 'Another Dummy',
+    email: 'newcontact@example.com',
+    phone: '1234567890',
+    colorcode: 1
+  });
+  console.log('contact added');
+};
 </script>
 <style lang="scss">
 .contacts-view {
@@ -33,7 +47,7 @@ import IconAddContact from '../components/icons/IconAddContact.vue';
     height: calc(100vh - 96px);
   }
 
-  .router-view {
+  .contact-details-container {
     width: 100%;
     padding: 24px;
   }

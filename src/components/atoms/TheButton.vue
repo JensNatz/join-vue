@@ -9,7 +9,7 @@ defineProps({
     size: {
         type: String,
         default: "medium",
-        validator: (value) => ["small", "medium"].includes(value)
+        validator: (value) => ["small", "medium", "large"].includes(value)
     },
     theme: {
         type: String,
@@ -38,8 +38,16 @@ button {
 }
 
 .medium {
+    font-size: 20px;
+    height: 48px;
+    font-weight: 700;
+    padding: 12px 24px;
+}
+
+.large {
     font-size: 24px;
     height: 60px;
+    font-weight: 700;
     padding: 12px 24px;
 }
 

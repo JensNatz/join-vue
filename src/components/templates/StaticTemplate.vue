@@ -4,7 +4,7 @@
             <h1>
                 <slot name="heading"></slot>
             </h1>
-            <router-link to="/summary">
+            <router-link to="/">
                 <IconArrowLeft />
             </router-link>
         </div>

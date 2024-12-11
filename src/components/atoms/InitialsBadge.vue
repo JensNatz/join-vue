@@ -37,8 +37,10 @@ const badgeColor = computed(() => {
 <style lang="scss">
 .initials-badge {
     @include flex();
+    flex-shrink: 0;
     border-radius: 50%;
     color: $basic-white;
+    font-family: 'Inter';
 }
 
 .small {
@@ -56,7 +58,8 @@ const badgeColor = computed(() => {
 }
 
 .large {
-    font-size: 24px;
+    font-size: 48px;
+    font-weight: 500;
     height: 120px;
     width: 120px;
     border: 3px solid $basic-white;
