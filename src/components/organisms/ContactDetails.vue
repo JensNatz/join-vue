@@ -1,7 +1,4 @@
 <template>
-  <TheOverlay v-if="overlayStore.isOverlayOpen">
-    <EditContactForm />
-  </TheOverlay>
   <div class="contact-details-view">
     <div class="contact-name-container">
       <InitialsBadge :name="contact.name" size="large" :colorCode="contact.colorcode" />
@@ -33,8 +30,6 @@ import { computed, ref } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
 import { deleteFromDatabase } from '@/services/databaseService';
-import TheOverlay from '../molecules/TheOverlay.vue';
-import EditContactForm from './EditContactForm.vue';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import IconDelete from '@/components/icons/IconDelete.vue';
@@ -58,7 +53,9 @@ const onDeleteContactClick = async () => {
 };
 
 const onEditContactClick = () => {
-  overlayStore.toggleOverlay(true);
+  overlayStore.toggleOverlay();
+  overlayStore.setOverlayMode('edit');
+  console.log('edit contact');
 };
 
 </script>

@@ -1,10 +1,18 @@
 <template>
-    <div class="theOverlay">
-        <slot></slot>
+    <div class="theOverlay" @click="onOverlayClick">
+        <div @click.stop>
+            <slot></slot>
+        </div>
     </div>
 </template>
 <script setup>
+import { useOverlayStore } from '@/stores/overlay';
 
+const overlayStore = useOverlayStore();
+
+const onOverlayClick = () => {
+    overlayStore.toggleOverlay();
+};
 </script>
 <style lang="scss">
 .theOverlay {
