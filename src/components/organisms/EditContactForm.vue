@@ -5,16 +5,19 @@
             <h1>Edit contact</h1>
         </div>
         <div class="edit-contact-form-body">
+
             <InitialsBadge :name="localContactData.name" size="large" :colorCode="localContactData.colorcode" />
-            <div class="edit-contact-form-body-inputs">
-                <TheInput icon="person" v-model="localContactData.name" pattern="[A-Za-z]+" />
-                <TheInput icon="email" type="email" v-model="localContactData.email" />
-                <TheInput icon="phone" type="tel" v-model="localContactData.phone" pattern="[0-9 ]*" />
-                <div class=" edit-contact-form-body-inputs-buttons">
-                    <TheButton theme="light" @click="onCancelClick">Cancel</TheButton>
-                    <TheButton @click="onSaveClick">Save</TheButton>
+            <Form :validation-schema="schema" @submit="onSubmit">
+                <div class="edit-contact-form-body-inputs">
+                    <TheInput name="name" icon="person" v-model="localContactData.name" />
+                    <TheInput name="email" icon="email" type="email" v-model="localContactData.email" />
+                    <TheInput name="phone" icon="phone" type="tel" v-model="localContactData.phone" />
+                    <div class=" edit-contact-form-body-inputs-buttons">
+                        <TheButton theme="light" @click="onCancelClick">Cancel</TheButton>
+                        <TheButton type="submit">Save</TheButton>
+                    </div>
                 </div>
-            </div>
+            </Form>
         </div>
     </div>
 </template>
@@ -23,14 +26,28 @@ import { ref, onBeforeMount } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
 import { updateOnDatabase } from '@/services/databaseService';
+import { Form } from 'vee-validate'
 import IconLogoWhite from '../icons/IconLogoWhite.vue';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import TheInput from '@/components/molecules/TheInput.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
+import * as yup from 'yup';
 
 const contactStore = useContactStore();
 const overlayStore = useOverlayStore();
 const localContactData = ref({});
+
+const schema = yup.object({
+    name: yup.string()
+        .required('Name is required')
+        .min(2, 'Name must be at least 2 characters'),
+    email: yup.string()
+        .required('Email is required')
+        .email('Please enter a valid email address'),
+    phone: yup.string()
+        .required('Phone number is required')
+        .matches(/^[0-9+\-\s()]*$/, 'Please enter a valid phone number'),
+});
 
 onBeforeMount(() => {
     localContactData.value = { ...contactStore.getContactInfoById(contactStore.currentContactId) };
@@ -40,7 +57,7 @@ const onCancelClick = () => {
     overlayStore.toggleOverlay();
 };
 
-const onSaveClick = async () => {
+const onSubmit = async () => {
     overlayStore.toggleOverlay();
     const backupContact = { ...localContactData.value };
     contactStore.updateContact(localContactData.value);
@@ -86,7 +103,7 @@ const onSaveClick = async () => {
 
         .edit-contact-form-body-inputs {
             @include flex($align: end, $direction: column);
-            gap: 8px;
+            gap: 16px;
             width: 100%;
         }
 

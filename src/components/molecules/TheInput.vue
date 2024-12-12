@@ -1,11 +1,13 @@
 <template>
     <div class="the-input">
-        <input v-model="modelValue" :type="type" :pattern="pattern" id="name" />
+        <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }" />
         <component :is="iconComponent" class="input-icon" />
+        <ErrorMessage :name="name" />
     </div>
 </template>
 <script setup>
 import { computed } from 'vue';
+import { Field, ErrorMessage } from 'vee-validate'
 import IconPerson from '../icons/IconPerson.vue';
 import IconEmail from '../icons/IconEmail.vue';
 import IconPhone from '../icons/IconPhone.vue';
@@ -13,6 +15,10 @@ import IconPhone from '../icons/IconPhone.vue';
 const modelValue = defineModel()
 
 const props = defineProps({
+    name: {
+        type: String,
+        required: false
+    },
     type: {
         type: String,
         default: 'text',
@@ -41,12 +47,12 @@ const props = defineProps({
     },
     icon: {
         type: String,
-        default: '',
+        required: false,
         validator: (value) => ['', 'person', 'email', 'phone'].includes(value)
     },
-    pattern: {
-        type: String,
-        default: ''
+    rules: {
+        type: [String, Array],
+        required: false
     }
 })
 
@@ -63,6 +69,7 @@ const iconComponent = computed(() => {
     }
 })
 
+
 </script>
 <style lang="scss">
 .the-input {
@@ -74,8 +81,12 @@ const iconComponent = computed(() => {
         width: 100%;
         height: 48px;
         border-bottom: 1px solid $basic-grey;
-        padding: 0 56px 0 24px;
+        padding: 0 12px;
         font-size: 20px;
+
+        &.has-icon {
+            padding-right: 56px;
+        }
     }
 
     .input-icon {
