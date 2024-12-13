@@ -1,10 +1,16 @@
 <template>
-    <div class="initials-badge" :class="size + ' ' + badgeColor">
-        {{ initials }}
+    <div class="initials-badge" :class="[size, initials ? badgeColor : '']">
+        <template v-if="initials">
+            {{ initials }}
+        </template>
+        <template v-else>
+            <IconPersonWhite />
+        </template>
     </div>
 </template>
 <script setup>
 import { computed } from 'vue';
+import IconPersonWhite from '@/components/icons/IconPersonWhite.vue';
 
 const props = defineProps({
     name: {
@@ -40,6 +46,7 @@ const badgeColor = computed(() => {
     flex-shrink: 0;
     border-radius: 50%;
     color: $basic-white;
+    background-color: $basic-grey;
     font-family: 'Inter';
 }
 
