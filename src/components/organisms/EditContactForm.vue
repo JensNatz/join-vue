@@ -5,10 +5,12 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { useContactStore } from '@/stores/contact';
+import { useOverlayStore } from '@/stores/overlay';
 import { updateOnDatabase } from '@/services/databaseService';
 import ContactManagementForm from './ContactManagementForm.vue';
 
 const contactStore = useContactStore();
+const overlayStore = useOverlayStore();
 const localContactData = ref({});
 
 onBeforeMount(() => {
@@ -16,6 +18,7 @@ onBeforeMount(() => {
 });
 
 const handleSubmit = async (formData) => {
+    overlayStore.toggleOverlay();
     const backupContact = { ...formData };
     contactStore.updateContact(formData);
     try {

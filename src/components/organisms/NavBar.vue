@@ -2,7 +2,7 @@
     <nav class="navbar">
         <div class="navbar-links">
             <NavLink title="Summary" :icon="IconSummary" to="/" />
-            <NavLink title="Board" :icon="IconBoard" to="/" />
+            <NavLink title="Board" :icon="IconBoard" to="/board" />
             <NavLink title="Contacts" :icon="IconContacts" to="/contacts" />
         </div>
         <div class="metalinks">

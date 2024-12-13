@@ -5,8 +5,7 @@
             <h1>{{ title }}</h1>
         </div>
         <div class="contact-management-form-body">
-            <InitialsBadge v-if="initialData.name" :name="initialData.name" size="large"
-                :colorCode="initialData.colorcode" />
+            <InitialsBadge :name="contactData.name" size="large" :colorCode="initialData.colorcode" />
             <Form :validation-schema="schema" @submit="onSubmit">
                 <div class="contact-management-form-body-inputs">
                     <TheInput name="name" icon="person" v-model="contactData.name" />
@@ -69,7 +68,6 @@ const onCancelClick = () => {
 };
 
 const onSubmit = async () => {
-    overlayStore.toggleOverlay();
     emit('submit', contactData.value);
 };
 
