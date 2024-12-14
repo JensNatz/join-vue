@@ -1,5 +1,5 @@
 <template>
-    <div class="initials-badge" :class="[size, initials ? badgeColor : '']">
+    <div class="initials-badge" :class="[size, initials ? badgeColor : number ? 'number-badge' : '']">
         <template v-if="initials">
             {{ initials }}
         </template>
@@ -115,5 +115,9 @@ const badgeColor = computed(() => {
 
 .color-9 {
     background-color: $badge-color-9;
+}
+
+.number-badge {
+    background-color: $basic-black;
 }
 </style>

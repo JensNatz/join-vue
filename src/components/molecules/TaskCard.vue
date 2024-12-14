@@ -3,13 +3,17 @@
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
         <SubtasksStatusBar v-if="task.subtasks" :subtasks="task.subtasks" />
-        <template v-if="task.assigned_to" v-for="contactId in displayedContacts">
-            <InitialsBadge size="small" v-bind="getContactInfo(contactId)" />
-        </template>
-        <template v-if="hasMoreContacts">
-            <InitialsBadge size="small" :number="remainingContactsCount" />
-        </template>
-        <PriorityBadge :priority="task.priority" />
+        <div class="task-card-bottom">
+            <div class="task-card-assigned-to">
+                <template v-if="task.assigned_to" v-for="contactId in displayedContacts">
+                    <InitialsBadge size="small" v-bind="getContactInfo(contactId)" />
+                </template>
+                <template v-if="hasMoreContacts">
+                    <InitialsBadge size="small" :number="remainingContactsCount" />
+                </template>
+            </div>
+            <PriorityBadge :priority="task.priority" />
+        </div>
     </div>
 </template>
 <script setup>
@@ -90,6 +94,20 @@ const remainingContactsCount = computed(() => {
         font-size: 14px;
         line-height: 14px;
         color: $basic-black;
+    }
+
+    .task-card-bottom {
+        @include flex($justify: space-between);
+        gap: 16px;
+        width: 100%;
+
+        .task-card-assigned-to {
+            @include flex($justify: start);
+
+            &>*:not(:first-child) {
+                margin-left: -8px;
+            }
+        }
     }
 }
 </style>
