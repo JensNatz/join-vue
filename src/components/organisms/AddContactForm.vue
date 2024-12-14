@@ -5,7 +5,6 @@
 <script setup>
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
-import { postToDatabase } from '@/services/databaseService';
 import ContactManagementForm from './ContactManagementForm.vue';
 
 const contactStore = useContactStore();
@@ -13,16 +12,12 @@ const overlayStore = useOverlayStore();
 
 const handleSubmit = async (formData) => {
     overlayStore.toggleOverlay();
+    const result = await contactStore.addContact(formData);
 
-    try {
-        const response = await postToDatabase('contacts', formData);
-        const newContactId = response.name;
-        const newContact = { ...formData, id: newContactId };
-        contactStore.addToSortedContacts(newContact);
-        contactStore.setCurrentContactId(newContactId);
+    if (result.success) {
         //TODO: Success message
-    } catch (error) {
-        // TODO: Error handling
+    } else {
+        //TODO: Show error message from result.error
     }
 };
 </script>

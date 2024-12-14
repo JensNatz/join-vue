@@ -3,6 +3,12 @@
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
         <SubtasksStatusBar v-if="task.subtasks" :subtasks="task.subtasks" />
+        <template v-if="task.assigned_to" v-for="contactId in displayedContacts">
+            <InitialsBadge size="small" v-bind="getContactInfo(contactId)" />
+        </template>
+        <template v-if="hasMoreContacts">
+            <InitialsBadge size="small" :number="remainingContactsCount" />
+        </template>
         <PriorityBadge :priority="task.priority" />
     </div>
 </template>
@@ -10,6 +16,9 @@
 import { stringService } from '@/services/stringService';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
+import { useContactStore } from '@/stores/contact';
+import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     task: {
@@ -18,6 +27,9 @@ const props = defineProps({
     }
 });
 
+const MAX_DISPLAYED_CONTACTS = 4;
+
+const contactStore = useContactStore();
 const emit = defineEmits(['dragstart', 'dragend']);
 
 const handleDragStart = (event) => {
@@ -30,6 +42,26 @@ const handleDragEnd = (event) => {
     event.target.classList.remove('dragging');
     emit('dragend', props.task);
 };
+
+const getContactInfo = (contactId) => {
+    const contactInfo = contactStore.getContactInfoById(contactId);
+    return {
+        name: contactInfo.name,
+        colorCode: contactInfo.colorcode
+    };
+};
+
+const displayedContacts = computed(() => {
+    return props.task.assigned_to?.slice(0, MAX_DISPLAYED_CONTACTS) || [];
+});
+
+const hasMoreContacts = computed(() => {
+    return props.task.assigned_to?.length > MAX_DISPLAYED_CONTACTS;
+});
+
+const remainingContactsCount = computed(() => {
+    return props.task.assigned_to?.length - MAX_DISPLAYED_CONTACTS;
+});
 </script>
 <style lang="scss">
 .task-card {

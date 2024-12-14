@@ -3,6 +3,9 @@
         <template v-if="initials">
             {{ initials }}
         </template>
+        <template v-else-if="number">
+            + {{ number }}
+        </template>
         <template v-else>
             <IconPersonWhite />
         </template>
@@ -15,11 +18,15 @@ import IconPersonWhite from '@/components/icons/IconPersonWhite.vue';
 const props = defineProps({
     name: {
         type: String,
-        required: true
+        required: false
+    },
+    number: {
+        type: Number,
+        required: false
     },
     colorCode: {
         type: Number,
-        required: true
+        required: false
     },
     size: {
         type: String,
@@ -31,6 +38,7 @@ const props = defineProps({
 });
 
 const initials = computed(() => {
+    if (!props.name) return '';
     const names = props.name.split(' ');
     return names.map(n => n[0]).slice(0, 2).join('').toUpperCase();
 });

@@ -10,21 +10,24 @@
     </div>
   </main>
 </template>
+
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { computed } from 'vue';
 import { useTasksStore } from '@/stores/tasks';
 import { useContactStore } from '@/stores/contact';
 import TaskCard from '@/components/molecules/TaskCard.vue';
 
 const tasksStore = useTasksStore();
 const contactStore = useContactStore();
-const sortedTasks = ref({});
 
-onBeforeMount(async () => {
-  await tasksStore.fetchAndSortTasks();
-  sortedTasks.value = tasksStore.sortedTasks;
-  console.log(sortedTasks.value);
-});
+await Promise.all([
+  tasksStore.fetchTasks(),
+  contactStore.fetchContacts()
+]);
+
+
+const sortedTasks = computed(() => tasksStore.getTasksSortedByStatus);
+
 </script>
 <style lang="scss">
 .board-view {

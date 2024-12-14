@@ -3,16 +3,10 @@ import { loadFromDatabase } from '@/services/databaseService';
 
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
-    sortedTasks: {},
+    tasks: {}
   }),
-  actions: {
-
-    async fetchAndSortTasks() {
-      const tasksFromDatabase = await loadFromDatabase("tasks");
-      this.sortedTasks = this.sortTasksByStatus(tasksFromDatabase);
-    },
-    
-    sortTasksByStatus(tasks) {
+  getters: {
+    getTasksSortedByStatus: (state) => {
       const sortedTasks = {
         "to-do": {},
         "progress": {},
@@ -20,7 +14,7 @@ export const useTasksStore = defineStore('tasks', {
         "done": {}
       };
 
-      for (const [taskId, taskDetails] of Object.entries(tasks)) {
+      for (const [taskId, taskDetails] of Object.entries(state.tasks)) {
         const { status } = taskDetails;
         if (sortedTasks.hasOwnProperty(status)) {
           sortedTasks[status][taskId] = taskDetails;
@@ -28,6 +22,13 @@ export const useTasksStore = defineStore('tasks', {
       }
       
       return sortedTasks;
+    }
+  },
+  actions: {
+
+    async fetchTasks() {
+      const tasksFromDatabase = await loadFromDatabase("tasks");
+      this.tasks = tasksFromDatabase;
     }
   }
 })
