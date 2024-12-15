@@ -1,28 +1,52 @@
 <template>
     <div class="task-card" draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
+        <TaskCategoryBadge :category="task.category" />
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
         <SubtasksStatusBar v-if="task.subtasks" :subtasks="task.subtasks" />
-        <PriorityBadge :priority="task.priority" />
+        <div class="task-card-bottom">
+            <div class="task-card-assigned-to">
+                <template v-if="task.assigned_to" v-for="contactId in displayedContacts">
+                    <InitialsBadge size="small" v-bind="getContactInfo(contactId)" />
+                </template>
+                <template v-if="hasMoreContacts">
+                    <InitialsBadge size="small" :number="remainingContactsCount" />
+                </template>
+            </div>
+            <PriorityBadge :priority="task.priority" />
+        </div>
     </div>
 </template>
 <script setup>
 import { stringService } from '@/services/stringService';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
+import { useContactStore } from '@/stores/contact';
+import { useTasksStore } from '@/stores/tasks';
+import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
+import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     task: {
         type: Object,
         required: true
+    },
+    taskId: {
+        type: String,
+        required: true
     }
 });
 
+const MAX_DISPLAYED_CONTACTS = 4;
+
+const contactStore = useContactStore();
+const tasksStore = useTasksStore();
 const emit = defineEmits(['dragstart', 'dragend']);
 
 const handleDragStart = (event) => {
+    tasksStore.setDragTaskId(props.taskId);
     event.dataTransfer.effectAllowed = 'move';
-    // event.dataTransfer.setData('text/plain', JSON.stringify(props.task));
     event.target.classList.add('dragging');
 };
 
@@ -30,6 +54,26 @@ const handleDragEnd = (event) => {
     event.target.classList.remove('dragging');
     emit('dragend', props.task);
 };
+
+const getContactInfo = (contactId) => {
+    const contactInfo = contactStore.getContactInfoById(contactId);
+    return {
+        name: contactInfo.name,
+        colorCode: contactInfo.colorcode
+    };
+};
+
+const displayedContacts = computed(() => {
+    return props.task.assigned_to?.slice(0, MAX_DISPLAYED_CONTACTS) || [];
+});
+
+const hasMoreContacts = computed(() => {
+    return props.task.assigned_to?.length > MAX_DISPLAYED_CONTACTS;
+});
+
+const remainingContactsCount = computed(() => {
+    return props.task.assigned_to?.length - MAX_DISPLAYED_CONTACTS;
+});
 </script>
 <style lang="scss">
 .task-card {
@@ -58,6 +102,20 @@ const handleDragEnd = (event) => {
         font-size: 14px;
         line-height: 14px;
         color: $basic-black;
+    }
+
+    .task-card-bottom {
+        @include flex($justify: space-between);
+        gap: 16px;
+        width: 100%;
+
+        .task-card-assigned-to {
+            @include flex($justify: start);
+
+            &>*:not(:first-child) {
+                margin-left: -8px;
+            }
+        }
     }
 }
 </style>

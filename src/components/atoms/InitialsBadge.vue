@@ -1,7 +1,10 @@
 <template>
-    <div class="initials-badge" :class="[size, initials ? badgeColor : '']">
+    <div class="initials-badge" :class="[size, initials ? badgeColor : number ? 'number-badge' : '']">
         <template v-if="initials">
             {{ initials }}
+        </template>
+        <template v-else-if="number">
+            + {{ number }}
         </template>
         <template v-else>
             <IconPersonWhite />
@@ -15,11 +18,15 @@ import IconPersonWhite from '@/components/icons/IconPersonWhite.vue';
 const props = defineProps({
     name: {
         type: String,
-        required: true
+        required: false
+    },
+    number: {
+        type: Number,
+        required: false
     },
     colorCode: {
         type: Number,
-        required: true
+        required: false
     },
     size: {
         type: String,
@@ -31,6 +38,7 @@ const props = defineProps({
 });
 
 const initials = computed(() => {
+    if (!props.name) return '';
     const names = props.name.split(' ');
     return names.map(n => n[0]).slice(0, 2).join('').toUpperCase();
 });
@@ -107,5 +115,9 @@ const badgeColor = computed(() => {
 
 .color-9 {
     background-color: $badge-color-9;
+}
+
+.number-badge {
+    background-color: $basic-black;
 }
 </style>

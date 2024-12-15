@@ -1,8 +1,43 @@
 import { defineStore } from 'pinia'
+import { loadFromDatabase, postToDatabase, updateOnDatabase } from '@/services/databaseService';
 
 export const useContactStore = defineStore('contact', {
-  state: () => ({ currentContactId: null, sortedContacts: {} }),
+  state: () => ({ contacts: {}, currentContactId: null, sortedContacts: {} }),
+  getters: {
+    getContactsSortedByLetter: (state) => {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const result = {};
+
+      alphabet.forEach(letter => {
+        result[letter] = [];
+      });
+
+      Object.entries(state.contacts).forEach(([id, contact]) => {
+        let firstLetter = contact.name[0].toUpperCase();
+        
+        if (firstLetter === "Ä") firstLetter = "A";
+        else if (firstLetter === "Ö") firstLetter = "O";
+        else if (firstLetter === "Ü") firstLetter = "U";
+
+        if (result[firstLetter]) {
+          contact.id = id;
+          result[firstLetter].push(contact);
+        }
+      });
+
+      Object.keys(result).forEach(letter => {
+        result[letter].sort((a, b) => a.name.localeCompare(b.name, 'de'));
+      });
+
+      return result;
+    },
+  },
   actions: {
+    async fetchContacts() {
+      const contacts = await loadFromDatabase('contacts');
+      this.contacts = contacts;
+    },
+
     setCurrentContactId(id) {
       this.currentContactId = id;
     },
@@ -11,60 +46,42 @@ export const useContactStore = defineStore('contact', {
       this.currentContactId = null;
     },
 
-    setSortedContacts(sortedContacts) {
-      this.sortedContacts = sortedContacts;
-    },
-
     getContactInfoById(contactId) {
-      for (const letter in this.sortedContacts) {
-        const contacts = this.sortedContacts[letter];
-    
-        if (contacts.length > 0) {
-          const contact = contacts.find(c => c.id === contactId);
-          if (contact) {
-            return contact;
-          }
-        }
-      }
-      return null;
+      return this.contacts[contactId];
     },
-    //TO DO: sollte auch Umllaurte berücksichtigen wie Ä, Ö, Ü, etc.
-    addToSortedContacts(contact) {
-      const firstLetter = contact.name[0].toUpperCase();
-      const contacts = this.sortedContacts[firstLetter];
-      const index = contacts.findIndex(existingContact => contact.name.localeCompare(existingContact.name) < 0);
     
-      if (index === -1) {
-        contacts.push(contact);
-      } else {
-        contacts.splice(index, 0, contact);
-      }
-    
-      return true; 
+    addToContacts(contact) {
+      this.contacts[contact.id] = contact;
     },
 
     deleteContactById(contactId) {
-      for (const letter in this.sortedContacts) {
-        const contacts = this.sortedContacts[letter];
-    
-        if (contacts.length > 0) {
-          const index = contacts.findIndex(c => c.id === contactId);
-    
-          if (index !== -1) {
-            contacts.splice(index, 1);
-            return true; 
-          }
-        }
-      }
-      return false;
+      delete this.contacts[contactId];
     },
 
-    updateContact(updatedContact) {
-      const deleted = this.deleteContactById(updatedContact.id);
-      if (!deleted) {
-        return false;
+    async updateContact(updatedContact) {
+      const previousContact = { ...this.contacts[updatedContact.id] };
+      this.contacts[updatedContact.id] = updatedContact;
+
+      try {
+        await updateOnDatabase(`contacts/${updatedContact.id}`, updatedContact);
+        return { success: true };
+      } catch (error) {
+        this.contacts[updatedContact.id] = previousContact;
+        return { success: false, error: error.message };
       }
-      return this.addToSortedContacts(updatedContact);
+    },
+
+    async addContact(contactData) {
+      try {
+        const response = await postToDatabase('contacts', contactData);
+        const newContactId = response.name;
+        const newContact = { ...contactData, id: newContactId };
+        this.addToContacts(newContact);
+        this.setCurrentContactId(newContactId);
+        return { success: true, contactId: newContactId };
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
     }
   }
 })

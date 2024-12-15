@@ -12,7 +12,6 @@ import NavBar from '@/components/organisms/NavBar.vue'
       <div class="page-content">
         <RouterView />
       </div>
-
     </div>
   </div>
 </template>

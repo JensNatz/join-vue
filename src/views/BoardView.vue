@@ -1,30 +1,24 @@
 <template>
   <main class="board-view">
-    <div class="board-view-container">
-      <div class="board-view-column" v-for="(column, status) in sortedTasks" :key="status">
-        <div class="board-view-column-header">{{ status }}</div>
-        <div class="board-view-column-tasks" v-for="(task) in column">
-          <TaskCard :task="task" />
-        </div>
+    <div class="board-view-controls">
+      <div class="board-view-controls-button">
+        <TheButton>Add Task</TheButton>
       </div>
     </div>
+    <Suspense>
+      <template #default>
+        <TaskBoard />
+      </template>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+    </Suspense>
   </main>
 </template>
+
 <script setup>
-import { onBeforeMount, ref } from 'vue';
-import { useTasksStore } from '@/stores/tasks';
-import { useContactStore } from '@/stores/contact';
-import TaskCard from '@/components/molecules/TaskCard.vue';
-
-const tasksStore = useTasksStore();
-const contactStore = useContactStore();
-const sortedTasks = ref({});
-
-onBeforeMount(async () => {
-  await tasksStore.fetchAndSortTasks();
-  sortedTasks.value = tasksStore.sortedTasks;
-  console.log(sortedTasks.value);
-});
+import TaskBoard from '@/components/organisms/TaskBoard.vue';
+import TheButton from '@/components/atoms/TheButton.vue';
 </script>
 <style lang="scss">
 .board-view {

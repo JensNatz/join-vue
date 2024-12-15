@@ -6,7 +6,6 @@
 import { ref, onBeforeMount } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
-import { updateOnDatabase } from '@/services/databaseService';
 import ContactManagementForm from './ContactManagementForm.vue';
 
 const contactStore = useContactStore();
@@ -19,13 +18,12 @@ onBeforeMount(() => {
 
 const handleSubmit = async (formData) => {
     overlayStore.toggleOverlay();
-    const backupContact = { ...formData };
-    contactStore.updateContact(formData);
-    try {
-        await updateOnDatabase(`contacts/${formData.id}`, formData);
+    const result = await contactStore.updateContact(formData);
+
+    if (result.success) {
         //TODO: Success message
-    } catch (error) {
-        contactStore.updateContact(backupContact);
+    } else {
+        //TODO: Show error message from result.error
     }
 };
 </script>
