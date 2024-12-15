@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { loadFromDatabase } from '@/services/databaseService';
+import { loadFromDatabase, updateOnDatabase } from '@/services/databaseService';
 
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
@@ -31,8 +31,16 @@ export const useTasksStore = defineStore('tasks', {
       const tasksFromDatabase = await loadFromDatabase("tasks");
       this.tasks = tasksFromDatabase;
     },
-    updateTaskStatus(taskId, newStatus) {
+    async updateTaskStatus(taskId, newStatus) {
+      const backupStatus = this.tasks[taskId].status;
       this.tasks[taskId].status = newStatus;
+      try {
+       await updateOnDatabase(`tasks/${taskId}/status`, newStatus);
+        return { success: true };
+      } catch (error) {
+        this.tasks[taskId].status = backupStatus;
+        return { success: false, error: error.message };
+      }
     },
 
     setDragTaskId(taskId) {

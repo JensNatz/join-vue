@@ -1,7 +1,7 @@
 <template>
     <div class="task-board">
         <div class="task-board-column" v-for="(column, status) in sortedTasks" :key="status" @dragover.prevent
-            @drop="onDrop($event, status)">
+            @drop="onDrop(status)">
             <div class="task-board-column-header">{{ status }}</div>
             <div class="task-board-column-tasks" v-for="(task, index) in column" :key="index">
                 <TaskCard :task="task" :taskId="index" />
@@ -24,10 +24,15 @@ await Promise.all([
 
 const sortedTasks = computed(() => tasksStore.getTasksSortedByStatus);
 
-const onDrop = (event, newStatus) => {
-    tasksStore.updateTaskStatus(tasksStore.dragTaskId, newStatus);
-    console.log(tasksStore.dragTaskId);
+const onDrop = async (newStatus) => {
+    const result = await tasksStore.updateTaskStatus(tasksStore.dragTaskId, newStatus);
     tasksStore.setDragTaskId(null);
+
+    if (result.success) {
+        console.log("success");
+    } else {
+        console.log("error");
+    }
 };
 </script>
 <style lang="scss">
