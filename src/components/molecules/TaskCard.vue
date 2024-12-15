@@ -1,5 +1,6 @@
 <template>
     <div class="task-card" draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
+        <TaskCategoryBadge :category="task.category" />
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
         <SubtasksStatusBar v-if="task.subtasks" :subtasks="task.subtasks" />
@@ -21,12 +22,18 @@ import { stringService } from '@/services/stringService';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
 import { useContactStore } from '@/stores/contact';
+import { useTasksStore } from '@/stores/tasks';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
+import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import { computed } from 'vue';
 
 const props = defineProps({
     task: {
         type: Object,
+        required: true
+    },
+    taskId: {
+        type: String,
         required: true
     }
 });
@@ -34,11 +41,12 @@ const props = defineProps({
 const MAX_DISPLAYED_CONTACTS = 4;
 
 const contactStore = useContactStore();
+const tasksStore = useTasksStore();
 const emit = defineEmits(['dragstart', 'dragend']);
 
 const handleDragStart = (event) => {
+    tasksStore.setDragTaskId(props.taskId);
     event.dataTransfer.effectAllowed = 'move';
-    // event.dataTransfer.setData('text/plain', JSON.stringify(props.task));
     event.target.classList.add('dragging');
 };
 

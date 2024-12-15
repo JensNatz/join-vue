@@ -3,7 +3,8 @@ import { loadFromDatabase } from '@/services/databaseService';
 
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
-    tasks: {}
+    tasks: {},
+    dragTaskId: null
   }),
   getters: {
     getTasksSortedByStatus: (state) => {
@@ -29,6 +30,13 @@ export const useTasksStore = defineStore('tasks', {
     async fetchTasks() {
       const tasksFromDatabase = await loadFromDatabase("tasks");
       this.tasks = tasksFromDatabase;
+    },
+    updateTaskStatus(taskId, newStatus) {
+      this.tasks[taskId].status = newStatus;
+    },
+
+    setDragTaskId(taskId) {
+      this.dragTaskId = taskId;
     }
   }
 })

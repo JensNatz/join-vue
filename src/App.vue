@@ -10,14 +10,7 @@ import NavBar from '@/components/organisms/NavBar.vue'
     <div class="app-content">
       <NavBar />
       <div class="page-content">
-        <Suspense>
-          <template #default>
-            <RouterView />
-          </template>
-          <template #fallback>
-            <div>Loading...</div>
-          </template>
-        </Suspense>
+        <RouterView />
       </div>
     </div>
   </div>
