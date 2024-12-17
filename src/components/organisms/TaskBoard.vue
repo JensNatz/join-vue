@@ -2,8 +2,8 @@
     <div class="task-board">
         <div class="task-board-column" v-for="(column, status) in sortedTasks" :key="status">
             <div class="task-board-column-header">{{ status }}</div>
-            <VueDraggable class="task-board-column-tasks" v-model="sortedTasks[status]" group="tasks"
-                :item-key="'taskId'" :data-status="status" @update="onUpdate" @add="onAdd" @remove="onRemove">
+            <VueDraggable class="task-board-tasklist" v-model="sortedTasks[status]" group="tasks" :item-key="'taskId'"
+                :data-status="status" @update="onUpdate" @add="onAdd" @remove="onRemove">
                 <div v-for="task in column" :key="task.taskId">
                     <TaskCard :task="task" :taskId="task.taskId" />
                 </div>
@@ -56,12 +56,24 @@ function onRemove(evt) {
 .task-board {
     @include flex($align: start);
     gap: 24px;
+    height: 100%;
 
     .task-board-column {
-        @include flex($direction: column);
+        @include flex($justify: start, $direction: column);
         gap: 24px;
-        background-color: aquamarine;
-        min-height: 100px;
+        height: 100%;
+        width: 252px;
+        flex-shrink: 0;
+
+        .task-board-tasklist {
+            @include flex($justify: start, $direction: column);
+            gap: 8px;
+            height: 100%;
+            padding: 8px;
+            width: 100%;
+            background-color: red;
+
+        }
     }
 }
 </style>

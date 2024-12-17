@@ -23,15 +23,7 @@ import TheButton from '@/components/atoms/TheButton.vue';
 <style lang="scss">
 .board-view {
   padding: 24px;
+  height: 100%;
 
-  .board-view-container {
-    @include flex($align: start);
-    gap: 24px;
-  }
-
-  .board-view-column {
-    @include flex($direction: column);
-    gap: 24px;
-  }
 }
 </style>
