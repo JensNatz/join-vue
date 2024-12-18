@@ -2,7 +2,7 @@
   <main class="board-view">
     <div class="board-view-controls">
       <div class="board-view-controls-button">
-        <TheButton>Add Task</TheButton>
+        <TheButton @click="addTask">Add Task</TheButton>
       </div>
     </div>
     <Suspense>
@@ -19,6 +19,29 @@
 <script setup>
 import TaskBoard from '@/components/organisms/TaskBoard.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
+import { postToDatabase } from '@/services/databaseService';
+
+async function addTask() {
+  console.log('addTask');
+  // await postToDatabase('tasks', {
+  //   assigned_to: [
+  //     "-O4ixFVzFa9T33PR02PH"
+  //   ],
+  //   category: "Technical Task",
+  //   date: "2024-11-08",
+  //   description: "Dummy Task",
+  //   order: 11,
+  //   priority: "medium",
+  //   status: "to-do",
+  //   subtasks: [
+  //     {
+  //       done: true,
+  //       title: "This is a test subtask"
+  //     }
+  //   ],
+  //   title: "Hello World",
+  // });
+}
 </script>
 <style lang="scss">
 .board-view {

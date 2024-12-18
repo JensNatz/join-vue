@@ -22,7 +22,6 @@ import { stringService } from '@/services/stringService';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
 import { useContactStore } from '@/stores/contact';
-import { useTasksStore } from '@/stores/tasks';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import { computed } from 'vue';
@@ -41,19 +40,6 @@ const props = defineProps({
 const MAX_DISPLAYED_CONTACTS = 4;
 
 const contactStore = useContactStore();
-const tasksStore = useTasksStore();
-const emit = defineEmits(['dragstart', 'dragend']);
-
-const handleDragStart = (event) => {
-    tasksStore.setDragTaskId(props.taskId);
-    event.dataTransfer.effectAllowed = 'move';
-    event.target.classList.add('dragging');
-};
-
-const handleDragEnd = (event) => {
-    event.target.classList.remove('dragging');
-    emit('dragend', props.task);
-};
 
 const getContactInfo = (contactId) => {
     const contactInfo = contactStore.getContactInfoById(contactId);
@@ -64,16 +50,20 @@ const getContactInfo = (contactId) => {
 };
 
 const displayedContacts = computed(() => {
-    return props.task.assigned_to?.slice(0, MAX_DISPLAYED_CONTACTS) || [];
+    if (props.task.assigned_to?.length > MAX_DISPLAYED_CONTACTS) {
+        return props.task.assigned_to.slice(0, MAX_DISPLAYED_CONTACTS - 1);
+    }
+    return props.task.assigned_to || [];
 });
 
 const hasMoreContacts = computed(() => {
-    return props.task.assigned_to?.length > MAX_DISPLAYED_CONTACTS;
+    return props.task.assigned_to?.length > MAX_DISPLAYED_CONTACTS - 1;
 });
 
 const remainingContactsCount = computed(() => {
-    return props.task.assigned_to?.length - MAX_DISPLAYED_CONTACTS;
+    return props.task.assigned_to?.length - (MAX_DISPLAYED_CONTACTS - 1);
 });
+
 </script>
 <style lang="scss">
 .task-card {

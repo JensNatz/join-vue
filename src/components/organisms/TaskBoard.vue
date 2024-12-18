@@ -12,44 +12,55 @@
     </div>
 </template>
 <script setup>
-import { computed } from 'vue';
-import { useTasksStore } from '@/stores/tasks';
+import { ref, onMounted } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import TaskCard from '../molecules/TaskCard.vue';
 import { VueDraggable } from 'vue-draggable-plus';
+import { getTasksSortedByStatus, updateTaskOrder, updateTaskStatus } from '@/services/taskService';
 
-const tasksStore = useTasksStore();
 const contactStore = useContactStore();
 await Promise.all([
-    tasksStore.fetchTasks(),
     contactStore.fetchContacts()
 ]);
 
-const sortedTasks = computed(() => {
-    const tasks = tasksStore.getTasksSortedByStatus;
-    return Object.entries(tasks).reduce((acc, [status, tasksObj]) => {
-        acc[status] = Object.entries(tasksObj).map(([id, task]) => ({
-            ...task,
-            taskId: id
-        }));
-        return acc;
-    }, {});
+const sortedTasks = ref({});
+
+onMounted(async () => {
+    sortedTasks.value = await getTasksSortedByStatus();
 });
 
-function onUpdate(evt) {
-    console.log('update', evt.data.taskId, evt.oldIndex, evt.newIndex, evt.data.status);
-    tasksStore.updateTaskOrder(evt.data.taskId, evt.newIndex, evt.data.status);
+async function onUpdate(evt) {
+    const newOrder = evt.newIndex;
+    const status = evt.data.status;
+
+    for (let i = newOrder; i < sortedTasks.value[status].length; i++) {
+        const task = sortedTasks.value[status][i];
+        await updateTaskOrder(task.taskId, i);
+    }
 }
 
-function onAdd(evt) {
+async function onAdd(evt) {
     const newStatus = evt.to.dataset.status;
-    const oldStatus = evt.from.dataset.status;
-    tasksStore.updateTaskOrder(evt.data.taskId, evt.newIndex, newStatus, evt.oldIndex, oldStatus);
+    const newOrder = evt.newIndex;
+    const taskId = evt.data.taskId;
+
+    for (let i = newOrder; i < sortedTasks.value[newStatus].length; i++) {
+        const task = sortedTasks.value[newStatus][i];
+        await updateTaskOrder(task.taskId, i);
+    }
+    await updateTaskStatus(taskId, newStatus);
 }
 
-function onRemove(evt) {
-    console.log('remove', evt.data.taskId);
+async function onRemove(evt) {
+    const oldStatus = evt.from.dataset.status;
+    const oldOrder = evt.oldIndex;
+
+    for (let i = oldOrder; i < sortedTasks.value[oldStatus].length; i++) {
+        const task = sortedTasks.value[oldStatus][i];
+        await updateTaskOrder(task.taskId, i);
+    }
 }
+
 
 </script>
 <style lang="scss">
@@ -71,8 +82,6 @@ function onRemove(evt) {
             height: 100%;
             padding: 8px;
             width: 100%;
-            background-color: red;
-
         }
     }
 }
