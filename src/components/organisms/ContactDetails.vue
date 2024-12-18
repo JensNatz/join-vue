@@ -54,7 +54,7 @@ const onDeleteContactClick = async () => {
 
 const onEditContactClick = () => {
   overlayStore.toggleOverlay();
-  overlayStore.setOverlayMode('edit');
+  overlayStore.setOverlayMode('editContact');
 };
 
 </script>

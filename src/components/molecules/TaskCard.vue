@@ -1,5 +1,5 @@
 <template>
-    <div class="task-card" draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
+    <div class="task-card" @click="onTaskCardClick">
         <TaskCategoryBadge :category="task.category" />
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
@@ -22,6 +22,8 @@ import { stringService } from '@/services/stringService';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
 import { useContactStore } from '@/stores/contact';
+import { useTasksStore } from '@/stores/tasks';
+import { useOverlayStore } from '@/stores/overlay';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import { computed } from 'vue';
@@ -40,6 +42,8 @@ const props = defineProps({
 const MAX_DISPLAYED_CONTACTS = 4;
 
 const contactStore = useContactStore();
+const tasksStore = useTasksStore();
+const overlayStore = useOverlayStore();
 
 const getContactInfo = (contactId) => {
     const contactInfo = contactStore.getContactInfoById(contactId);
@@ -63,6 +67,12 @@ const hasMoreContacts = computed(() => {
 const remainingContactsCount = computed(() => {
     return props.task.assigned_to?.length - (MAX_DISPLAYED_CONTACTS - 1);
 });
+
+const onTaskCardClick = () => {
+    tasksStore.setCurrentTaskId(props.taskId);
+    overlayStore.toggleOverlay();
+    overlayStore.setOverlayMode('editTask');
+};
 
 </script>
 <style lang="scss">

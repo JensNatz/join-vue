@@ -1,5 +1,5 @@
 <template>
-    <div class="theOverlay" @click="onOverlayClick">
+    <div v-if="overlayStore.isOverlayOpen" class="theOverlay" @click="onOverlayClick">
         <div @click.stop>
             <slot></slot>
         </div>

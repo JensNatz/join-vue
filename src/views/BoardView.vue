@@ -1,4 +1,7 @@
 <template>
+  <TheOverlay>
+
+  </TheOverlay>
   <main class="board-view">
     <div class="board-view-controls">
       <div class="board-view-controls-button">
@@ -20,9 +23,15 @@
 import TaskBoard from '@/components/organisms/TaskBoard.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
 import { postToDatabase } from '@/services/databaseService';
+import TheOverlay from '@/components/molecules/TheOverlay.vue';
+import { useOverlayStore } from '@/stores/overlay';
+
+const overlayStore = useOverlayStore();
 
 async function addTask() {
   console.log('addTask');
+  overlayStore.toggleOverlay();
+  overlayStore.setOverlayMode('createTask');
   // await postToDatabase('tasks', {
   //   assigned_to: [
   //     "-O4ixFVzFa9T33PR02PH"

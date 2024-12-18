@@ -14,19 +14,21 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useContactStore } from '@/stores/contact';
+import { useTasksStore } from '@/stores/tasks';
 import TaskCard from '../molecules/TaskCard.vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { getTasksSortedByStatus, updateTaskOrder, updateTaskStatus } from '@/services/taskService';
 
 const contactStore = useContactStore();
+const taskStore = useTasksStore();
 await Promise.all([
-    contactStore.fetchContacts()
+    contactStore.fetchContacts(),
+    taskStore.fetchTasks()
 ]);
 
 const sortedTasks = ref({});
 
 onMounted(async () => {
-    sortedTasks.value = await getTasksSortedByStatus();
+    sortedTasks.value = taskStore.tasks;
 });
 
 async function onUpdate(evt) {
@@ -35,7 +37,7 @@ async function onUpdate(evt) {
 
     for (let i = newOrder; i < sortedTasks.value[status].length; i++) {
         const task = sortedTasks.value[status][i];
-        await updateTaskOrder(task.taskId, i);
+        await taskStore.updateTaskOrder(task.taskId, i);
     }
 }
 
@@ -46,9 +48,9 @@ async function onAdd(evt) {
 
     for (let i = newOrder; i < sortedTasks.value[newStatus].length; i++) {
         const task = sortedTasks.value[newStatus][i];
-        await updateTaskOrder(task.taskId, i);
+        await taskStore.updateTaskOrder(task.taskId, i);
     }
-    await updateTaskStatus(taskId, newStatus);
+    await taskStore.updateTaskStatus(taskId, newStatus);
 }
 
 async function onRemove(evt) {
@@ -57,7 +59,7 @@ async function onRemove(evt) {
 
     for (let i = oldOrder; i < sortedTasks.value[oldStatus].length; i++) {
         const task = sortedTasks.value[oldStatus][i];
-        await updateTaskOrder(task.taskId, i);
+        await taskStore.updateTaskOrder(task.taskId, i);
     }
 }
 
