@@ -1,50 +1,78 @@
 import { defineStore } from 'pinia'
-import { loadFromDatabase, updateOnDatabase } from '@/services/databaseService';
+import * as taskService from '@/services/taskService'
 
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
     tasks: {},
-    dragTaskId: null
+    currentTaskId: '',
+    error: null
   }),
+
   getters: {
-    getTasksSortedByStatus: (state) => {
+    getCurrentTask() {
+      return this.tasks[this.currentTaskId];
+    },
+    getSortedTasks() {
       const sortedTasks = {
-        "to-do": {},
-        "progress": {},
-        "feedback": {},
-        "done": {}
+        "to-do": [],
+        "progress": [],
+        "feedback": [],
+        "done": []
       };
 
-      for (const [taskId, taskDetails] of Object.entries(state.tasks)) {
+      for (const [taskId, taskDetails] of Object.entries(this.tasks)) {
         const { status } = taskDetails;
         if (sortedTasks.hasOwnProperty(status)) {
-          sortedTasks[status][taskId] = taskDetails;
+          sortedTasks[status].push({
+            ...taskDetails,
+            taskId: taskId
+          });
         }
+      }
+      
+      for (const status in sortedTasks) {
+        sortedTasks[status].sort((a, b) => a.order - b.order);
       }
       
       return sortedTasks;
     }
   },
-  actions: {
 
+  actions: {
     async fetchTasks() {
-      const tasksFromDatabase = await loadFromDatabase("tasks");
-      this.tasks = tasksFromDatabase;
-    },
-    async updateTaskStatus(taskId, newStatus) {
-      const backupStatus = this.tasks[taskId].status;
-      this.tasks[taskId].status = newStatus;
       try {
-       await updateOnDatabase(`tasks/${taskId}/status`, newStatus);
-        return { success: true };
-      } catch (error) {
-        this.tasks[taskId].status = backupStatus;
-        return { success: false, error: error.message };
+        this.tasks = await taskService.loadTasksFromDatabase()
+      } catch (err) {
+        this.error = err.message
+      } 
+    },
+
+    async updateTaskOrder(taskId, newIndex) {
+      try {
+        await taskService.updateTaskOrder(taskId, newIndex)
+      } catch (err) {
+        this.error = err.message
       }
     },
 
-    setDragTaskId(taskId) {
-      this.dragTaskId = taskId;
+    async updateTaskStatus(taskId, newStatus) {
+      try {
+        await taskService.updateTaskStatus(taskId, newStatus)
+      } catch (err) {
+        this.error = err.message
+      }
+    },
+
+    async updateSubtaskStatus(taskId, subtaskId, newStatus) {
+      try {
+      await taskService.updateSubtaskStatus(taskId, subtaskId, newStatus)
+      } catch (err) {
+        this.error = err.message
+      }
+    },
+
+    setCurrentTaskId(taskId) {
+      this.currentTaskId = taskId;
     }
   }
 })

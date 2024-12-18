@@ -1,7 +1,7 @@
 <template>
-  <TheOverlay v-if="overlayStore.isOverlayOpen">
-    <EditContactForm v-if="overlayStore.overlayMode === 'edit'" />
-    <AddContactForm v-if="overlayStore.overlayMode === 'create'" />
+  <TheOverlay>
+    <EditContactForm v-if="overlayStore.overlayMode === 'editContact'" />
+    <AddContactForm v-if="overlayStore.overlayMode === 'createContact'" />
   </TheOverlay>
   <div class="contacts-view">
     <div class="contacts-list-container">
@@ -32,7 +32,7 @@ const overlayStore = useOverlayStore();
 const contactStore = useContactStore();
 
 const onAddContactClick = () => {
-  overlayStore.setOverlayMode('create');
+  overlayStore.setOverlayMode('createContact');
   overlayStore.toggleOverlay();
 };
 
