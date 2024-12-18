@@ -8,10 +8,40 @@ export const useTasksStore = defineStore('tasks', {
     error: null
   }),
 
+  getters: {
+    getCurrentTask() {
+      return this.tasks[this.currentTaskId];
+    },
+    getSortedTasks() {
+      const sortedTasks = {
+        "to-do": [],
+        "progress": [],
+        "feedback": [],
+        "done": []
+      };
+
+      for (const [taskId, taskDetails] of Object.entries(this.tasks)) {
+        const { status } = taskDetails;
+        if (sortedTasks.hasOwnProperty(status)) {
+          sortedTasks[status].push({
+            ...taskDetails,
+            taskId: taskId
+          });
+        }
+      }
+      
+      for (const status in sortedTasks) {
+        sortedTasks[status].sort((a, b) => a.order - b.order);
+      }
+      
+      return sortedTasks;
+    }
+  },
+
   actions: {
     async fetchTasks() {
       try {
-        this.tasks = await taskService.getTasksSortedByStatus()
+        this.tasks = await taskService.loadTasksFromDatabase()
       } catch (err) {
         this.error = err.message
       } 
@@ -28,6 +58,14 @@ export const useTasksStore = defineStore('tasks', {
     async updateTaskStatus(taskId, newStatus) {
       try {
         await taskService.updateTaskStatus(taskId, newStatus)
+      } catch (err) {
+        this.error = err.message
+      }
+    },
+
+    async updateSubtaskStatus(taskId, subtaskId, newStatus) {
+      try {
+      await taskService.updateSubtaskStatus(taskId, subtaskId, newStatus)
       } catch (err) {
         this.error = err.message
       }

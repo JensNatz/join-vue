@@ -28,7 +28,7 @@ await Promise.all([
 const sortedTasks = ref({});
 
 onMounted(async () => {
-    sortedTasks.value = taskStore.tasks;
+    sortedTasks.value = taskStore.getSortedTasks;
 });
 
 async function onUpdate(evt) {

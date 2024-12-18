@@ -1,6 +1,6 @@
 <template>
   <TheOverlay>
-
+    <TaskOverview v-if="overlayStore.overlayMode === 'showTask'" />
   </TheOverlay>
   <main class="board-view">
     <div class="board-view-controls">
@@ -22,8 +22,8 @@
 <script setup>
 import TaskBoard from '@/components/organisms/TaskBoard.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
-import { postToDatabase } from '@/services/databaseService';
 import TheOverlay from '@/components/molecules/TheOverlay.vue';
+import TaskOverview from '@/components/organisms/TaskOverview.vue';
 import { useOverlayStore } from '@/stores/overlay';
 
 const overlayStore = useOverlayStore();
@@ -32,24 +32,6 @@ async function addTask() {
   console.log('addTask');
   overlayStore.toggleOverlay();
   overlayStore.setOverlayMode('createTask');
-  // await postToDatabase('tasks', {
-  //   assigned_to: [
-  //     "-O4ixFVzFa9T33PR02PH"
-  //   ],
-  //   category: "Technical Task",
-  //   date: "2024-11-08",
-  //   description: "Dummy Task",
-  //   order: 11,
-  //   priority: "medium",
-  //   status: "to-do",
-  //   subtasks: [
-  //     {
-  //       done: true,
-  //       title: "This is a test subtask"
-  //     }
-  //   ],
-  //   title: "Hello World",
-  // });
 }
 </script>
 <style lang="scss">

@@ -71,7 +71,7 @@ const remainingContactsCount = computed(() => {
 const onTaskCardClick = () => {
     tasksStore.setCurrentTaskId(props.taskId);
     overlayStore.toggleOverlay();
-    overlayStore.setOverlayMode('editTask');
+    overlayStore.setOverlayMode('showTask');
 };
 
 </script>
