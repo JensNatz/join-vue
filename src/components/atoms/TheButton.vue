@@ -1,7 +1,7 @@
 <template>
     <button class="the-button" :class="[theme, size]">
         <slot>Submit</slot>
-        <slot name="icon"></slot>
+        <slot name="icon" class="icon"></slot>
     </button>
 </template>
 <script setup>
@@ -33,8 +33,13 @@ button {
 }
 
 .small {
-    padding: 8px 16px;
-    font-size: 20px;
+    padding: 12px 16px;
+    font-size: 16px;
+
+    .icon {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 .medium {
@@ -42,6 +47,11 @@ button {
     height: 48px;
     font-weight: 700;
     padding: 12px 24px;
+
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 .large {
@@ -49,6 +59,11 @@ button {
     height: 60px;
     font-weight: 700;
     padding: 12px 24px;
+
+    .icon {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 

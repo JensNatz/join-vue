@@ -90,6 +90,7 @@ const handleSubtaskUpdate = async (index, value) => {
     .task-overview-header {
         @include flex($direction: column, $align: start, $justify: start);
         gap: 24px;
+        width: 100%;
 
         .task-overview-meta {
             @include flex($align: center, $justify: space-between);

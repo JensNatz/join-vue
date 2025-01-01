@@ -48,6 +48,7 @@ const onDeleteContactClick = async () => {
     .mobile-options-menu-item {
         @include flex($justify: start);
         gap: 8px;
+        width: 100%;
         cursor: pointer;
 
         &:hover {

@@ -42,6 +42,7 @@ const iconComponent = computed(() => ({
     }
 
     .icon {
+        @include flex();
         width: 32px;
         height: 32px;
 
