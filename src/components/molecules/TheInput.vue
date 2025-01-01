@@ -2,7 +2,7 @@
     <div class="the-input">
         <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }" />
         <component :is="iconComponent" class="input-icon" />
-        <ErrorMessage :name="name" />
+        <ErrorMessage class="error-message" :name="name" />
     </div>
 </template>
 <script setup>
@@ -96,6 +96,11 @@ const iconComponent = computed(() => {
         right: 24px;
         width: 25px;
         height: 24px;
+    }
+
+    .error-message {
+        color: $color-error;
+        font-size: 14px;
     }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <header class="the-header">
-        <IconLogoWhite />
-        <div>
+        <IconLogoWhite class="the-header-logo" />
+        <div class="the-header-title">
             Kanban Project Management Tool
         </div>
     </header>
@@ -18,5 +18,23 @@ import IconLogoWhite from '../icons/IconLogoWhite.vue'
     width: 100%;
     height: 96px;
     padding: 20px 48px;
+
+    @media (max-width: $breakpoint-lg) {
+        height: 80px;
+        padding: 0px 16px;
+    }
+
+    .the-header-logo {
+        @media (max-width: $breakpoint-lg) {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    .the-header-title {
+        @media (max-width: $breakpoint-sm) {
+            display: none;
+        }
+    }
 }
 </style>

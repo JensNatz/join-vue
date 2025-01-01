@@ -25,5 +25,11 @@ const onCloseClick = () => {
     &:hover {
         background-color: rgba($primary-color, 0.1);
     }
+
+    @media (max-width: $breakpoint-lg) {
+        .icon {
+            color: $basic-white;
+        }
+    }
 }
 </style>

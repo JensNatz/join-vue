@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { loadFromDatabase, postToDatabase, updateOnDatabase } from '@/services/databaseService';
+import { loadFromDatabase, postToDatabase, updateOnDatabase, deleteFromDatabase } from '@/services/databaseService';
 
 export const useContactStore = defineStore('contact', {
   state: () => ({ contacts: {}, currentContactId: null, sortedContacts: {} }),
@@ -56,6 +56,20 @@ export const useContactStore = defineStore('contact', {
 
     deleteContactById(contactId) {
       delete this.contacts[contactId];
+    },
+
+    async deleteContact(contactId) {
+      const contactBackup = { ...this.contacts[contactId] };
+      this.deleteContactById(contactId);
+      this.clearCurrentContactId();
+
+      try {
+        await deleteFromDatabase(`contacts/${contactId}`);
+        return { success: true };
+      } catch (error) {
+        this.addToContacts(contactBackup);
+        return { success: false, error: error.message };
+      }
     },
 
     async updateContact(updatedContact) {

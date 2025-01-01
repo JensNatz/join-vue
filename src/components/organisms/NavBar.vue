@@ -25,12 +25,31 @@ import IconContacts from '../icons/IconContacts.vue'
     height: 100%;
     padding: 66px 24px;
 
-
+    @media (max-width: $breakpoint-lg) {
+        @include flex($direction: row);
+        width: 100%;
+        height: 80px;
+        padding: 8px 16px;
+    }
 
     .metalinks,
     .navbar-links {
         @include flex($direction: column);
         gap: 8px
+    }
+
+    .navbar-links {
+        @media (max-width: $breakpoint-lg) {
+            @include flex($justify: space-between);
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .metalinks {
+        @media (max-width: $breakpoint-lg) {
+            display: none;
+        }
     }
 
 

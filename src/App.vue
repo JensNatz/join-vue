@@ -28,6 +28,10 @@ import NavBar from '@/components/organisms/NavBar.vue'
   @include flex($align: flex-start);
   overflow: hidden;
 
+  @media (max-width: $breakpoint-lg) {
+    @include flex($direction: column-reverse);
+  }
+
   .page-content {
     width: 100%;
     height: 100%;

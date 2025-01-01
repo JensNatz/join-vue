@@ -1,6 +1,6 @@
 <template>
     <router-link class="nav-link" :to="to">
-        <component :is="icon" />
+        <component class="nav-link-icon" :is="icon" />
         {{ title }}
     </router-link>
 </template>
@@ -31,11 +31,32 @@ const props = defineProps({
     padding: 8px 32px;
     border-radius: 8px;
     color: $basic-dark;
+    font-size: 16px;
     cursor: pointer;
 
     &:hover {
         color: inherit;
         background-color: $primary-color-light;
+    }
+
+    @media (max-width: $breakpoint-lg) {
+        @include flex();
+        height: 100%;
+        width: auto;
+        flex: 1;
+        padding: 4px 16px;
+    }
+
+    @media (max-width: $breakpoint-md) {
+        @include flex($direction: column);
+        gap: 4px;
+        font-size: 14px;
+
+        .nav-link-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
     }
 }
 </style>
