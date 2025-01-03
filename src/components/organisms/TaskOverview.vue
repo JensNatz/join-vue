@@ -54,7 +54,7 @@ import { stringService } from '@/services/stringService';
 import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import TheCheckbox from '@/components/molecules/TheCheckbox.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
-import CloseIcon from '@/components/molecules/CloseIcon.vue';
+import CloseIcon from '@/components/molecules/CloseButton.vue';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import { ref, computed } from 'vue';
 import { useContactStore } from '@/stores/contact';

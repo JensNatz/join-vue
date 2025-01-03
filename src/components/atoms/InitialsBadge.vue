@@ -48,7 +48,7 @@ const badgeColor = computed(() => {
 });
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .initials-badge {
     @include flex();
     flex-shrink: 0;

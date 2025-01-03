@@ -1,6 +1,8 @@
 <template>
     <div class="the-input">
-        <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }" />
+        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" />
+        <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }"
+            :as="type === 'textarea' ? 'textarea' : 'input'" />
         <component :is="iconComponent" class="input-icon" />
         <ErrorMessage class="error-message" :name="name" />
     </div>
@@ -8,6 +10,7 @@
 <script setup>
 import { computed } from 'vue';
 import { Field, ErrorMessage } from 'vee-validate'
+import TheLabel from '@/components/atoms/TheLabel.vue';
 import IconPerson from '../icons/IconPerson.vue';
 import IconEmail from '../icons/IconEmail.vue';
 import IconPhone from '../icons/IconPhone.vue';
@@ -18,6 +21,14 @@ const props = defineProps({
     name: {
         type: String,
         required: false
+    },
+    label: {
+        type: String,
+        required: false
+    },
+    required: {
+        type: Boolean,
+        default: false
     },
     type: {
         type: String,
@@ -42,7 +53,8 @@ const props = defineProps({
             'submit',
             'reset',
             'button',
-            'hidden'
+            'hidden',
+            'textarea'
         ].includes(value)
     },
     icon: {
@@ -65,28 +77,42 @@ const iconComponent = computed(() => {
         case 'phone':
             return IconPhone;
         default:
-            return null; // Wenn kein Icon gesetzt ist
+            return null;
     }
 })
 
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.label {
+    font-size: 14px;
+    padding-left: 8px;
+}
+
 .the-input {
     position: relative;
     width: 100%;
-    height: 48px;
 
-    input {
+    input,
+    textarea {
         width: 100%;
-        height: 48px;
         border-bottom: 1px solid $basic-grey;
-        padding: 0 12px;
+        padding: 12px;
         font-size: 20px;
 
         &.has-icon {
             padding-right: 56px;
         }
+    }
+
+    input {
+        height: 48px;
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: none;
+        border: 1px solid $basic-grey;
     }
 
     .input-icon {

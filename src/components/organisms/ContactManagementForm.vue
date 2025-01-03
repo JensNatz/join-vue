@@ -33,7 +33,7 @@ import TheInput from '@/components/molecules/TheInput.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
 import * as yup from 'yup';
 import { useOverlayStore } from '@/stores/overlay';
-import CloseIcon from '@/components/molecules/CloseIcon.vue';
+import CloseIcon from '@/components/molecules/CloseButton.vue';
 
 const overlayStore = useOverlayStore();
 
