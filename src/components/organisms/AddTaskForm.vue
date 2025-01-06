@@ -6,18 +6,17 @@
         </div>
         <Form class="task-form">
             <div class="task-form-column">
-                <TheInput name="title" label="Title" required="true" />
+                <TheInput name="title" label="Title" :required="true" />
                 <TheInput name="description" label="Description" type="textarea" />
-
             </div>
             <div class="task-form-column">
-                <TheInput name="dueDate" label="Due Date" type="date" required="true" />
+                <TheInput name="dueDate" label="Due Date" type="date" :required="true" />
                 <div class="priority-buttons">
                     <PriorityButton class="priority-button" v-for="priority in priorities" :key="priority"
                         :priority="priority" :isSelected="selectedPriority === priority"
                         @click="setPriority(priority)" />
                 </div>
-                <TheDropdown name="category" label="Category" :options="categories" required="true" />
+                <TheDropdown name="category" label="Category" :options="categories" :required="true" />
                 <TheButton type="submit">Create Task</TheButton>
             </div>
         </Form>
