@@ -4,7 +4,7 @@
             {{ initials }}
         </template>
         <template v-else-if="number">
-            + {{ number }}
+            +{{ number }}
         </template>
         <template v-else>
             <IconPersonWhite />

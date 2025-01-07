@@ -24,7 +24,7 @@
   <FloatingActionButton :type="floatingActionType" @click.stop="onFloatingActionClick" />
 </template>
 <script setup>
-import { computed, ref, getCurrentInstance } from 'vue';
+import { computed, ref } from 'vue';
 import TheOverlay from '@/components/molecules/TheOverlay.vue';
 import EditContactForm from '@/components/organisms/EditContactForm.vue';
 import ContactsList from '@/components/organisms/ContactsList.vue'
@@ -72,11 +72,6 @@ const onOutsideClick = () => {
 const closeOptionsMenu = () => {
   isOptionsMenuVisible.value = false;
 };
-
-if (import.meta.env.SSR === false) {
-  const app = getCurrentInstance();
-  app.appContext.app.directive('click-outside', vClickOutside);
-}
 
 </script>
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
     <div class="the-input">
-        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" />
+        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" class="label" />
         <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }"
             :as="type === 'textarea' ? 'textarea' : 'input'" />
         <component :is="iconComponent" class="input-icon" />
@@ -84,14 +84,14 @@ const iconComponent = computed(() => {
 
 </script>
 <style lang="scss" scoped>
-.label {
-    font-size: 14px;
-    padding-left: 8px;
-}
-
 .the-input {
     position: relative;
     width: 100%;
+
+    .label {
+        display: block;
+        margin-bottom: 8px;
+    }
 
     input,
     textarea {

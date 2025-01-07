@@ -8,6 +8,7 @@
             <div class="task-form-column">
                 <TheInput name="title" label="Title" :required="true" />
                 <TheInput name="description" label="Description" type="textarea" />
+                <ContactAssignmentDropdown name="contacts" label="Contacts" />
             </div>
             <div class="task-form-column">
                 <TheInput name="dueDate" label="Due Date" type="date" :required="true" />
@@ -30,6 +31,7 @@ import TheInput from '@/components/molecules/TheInput.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
 import PriorityButton from '@/components/atoms/PriorityButton.vue';
 import CloseButton from '@/components/molecules/CloseButton.vue';
+import ContactAssignmentDropdown from '@/components/molecules/ContactAssignmentDropdown.vue';
 import TheDropdown from '@/components/molecules/TheDropdown.vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';

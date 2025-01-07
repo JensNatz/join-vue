@@ -1,6 +1,6 @@
 <template>
     <div class="the-dropdown" @click="toggleDropdown" v-click-outside="hideDropdown">
-        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" />
+        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" class="label" />
         <div class="dropdown-header">
             <div class="dropdown-header-text">{{ selectedOption ? selectedOption : 'Select task category' }}</div>
             <IconDropdownArrowDown v-if="!isActive" />
@@ -13,11 +13,11 @@
     </div>
 </template>
 <script setup>
-import TheLabel from '@/components/atoms/TheLabel.vue';
 import { ref } from 'vue';
-import { vClickOutside } from '@/directives/click-outside';
+import TheLabel from '@/components/atoms/TheLabel.vue';
 import IconDropdownArrowDown from '@/components/icons/IconDropdownArrowDown.vue';
 import IconDropdownArrowUp from '@/components/icons/IconDropdownArrowUp.vue';
+
 const props = defineProps({
     name: {
         type: String,
@@ -59,6 +59,11 @@ const selectOption = (option) => {
     width: 100%;
     background-color: $basic-white;
     cursor: pointer;
+
+    .label {
+        display: block;
+        margin-bottom: 8px;
+    }
 
     .dropdown-header {
         @include flex($justify: space-between);

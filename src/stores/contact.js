@@ -31,6 +31,18 @@ export const useContactStore = defineStore('contact', {
 
       return result;
     },
+
+    getContactsSortedByAlphabet: (state) => {
+      return Object.entries(state.contacts)
+        .map(([id, contact]) => ({
+          id,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          colorcode: contact.colorcode
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name, 'de'));
+    }
   },
   actions: {
     async fetchContacts() {
