@@ -106,6 +106,7 @@ const remainingContacts = computed(() => {
 
     .dropdown-container {
         position: absolute;
+        z-index: 1;
         width: 100%;
         max-height: 0;
         overflow: hidden;

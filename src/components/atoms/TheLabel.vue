@@ -12,7 +12,7 @@ defineProps({
     },
     htmlFor: {
         type: String,
-        required: true
+        required: false
     },
     marksRequired: {
         type: Boolean,

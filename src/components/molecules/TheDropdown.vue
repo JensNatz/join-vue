@@ -10,13 +10,16 @@
             <div class="dropdown-item" v-for="option in options" :value="option" :key="option"
                 @click.stop="selectOption(option)">{{ option }}</div>
         </div>
+        <ErrorMessage class="error-message" :name="name" />
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TheLabel from '@/components/atoms/TheLabel.vue';
+import { ErrorMessage } from 'vee-validate'
 import IconDropdownArrowDown from '@/components/icons/IconDropdownArrowDown.vue';
 import IconDropdownArrowUp from '@/components/icons/IconDropdownArrowUp.vue';
+import { useField } from 'vee-validate';
 
 const props = defineProps({
     name: {
@@ -37,8 +40,14 @@ const props = defineProps({
     }
 })
 
+const { value: fieldValue, handleChange } = useField(props.name);
 const isActive = ref(false)
 const selectedOption = ref(null)
+
+watch(selectedOption, (newValue) => {
+    handleChange(newValue);
+});
+
 const toggleDropdown = () => {
     isActive.value = !isActive.value
 }
@@ -74,6 +83,7 @@ const selectOption = (option) => {
 
     .dropdown-container {
         position: absolute;
+        z-index: 1;
         width: 100%;
         max-height: 0;
         overflow: hidden;
@@ -98,9 +108,12 @@ const selectOption = (option) => {
             &:hover {
                 background-color: $basic-grey;
             }
-
-
         }
+    }
+
+    .error-message {
+        color: $color-error;
+        font-size: 14px;
     }
 }
 </style>

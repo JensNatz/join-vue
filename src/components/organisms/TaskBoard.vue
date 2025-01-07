@@ -85,7 +85,6 @@ async function onRemove(evt) {
 async function addTask() {
     overlayStore.toggleOverlay();
     overlayStore.setOverlayMode('createTask');
-    console.log('addTask');
 }
 
 
