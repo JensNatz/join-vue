@@ -8,7 +8,9 @@
 import { computed } from 'vue';
 const CATEGORY_CLASSES = {
     'Technical Task': 'technical',
-    'User Story': 'user-story'
+    'User Story': 'user-story',
+    'Bug': 'bug',
+    'Other': 'other'
 };
 
 const props = defineProps({
@@ -35,6 +37,14 @@ const categoryClass = computed(() => CATEGORY_CLASSES[props.category]);
 
     &.user-story {
         background-color: $task-category-2;
+    }
+
+    &.bug {
+        background-color: $task-category-3;
+    }
+
+    &.other {
+        background-color: $task-category-4;
     }
 }
 </style>

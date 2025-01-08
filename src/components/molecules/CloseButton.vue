@@ -1,11 +1,19 @@
 <template>
     <div class="close-icon" @click="onCloseClick">
-        <IconClose />
+        <IconClose :class="theme" />
     </div>
 </template>
 <script setup>
 import { useOverlayStore } from '@/stores/overlay';
 import IconClose from '@/components/icons/IconClose.vue';
+
+const props = defineProps({
+    theme: {
+        type: String,
+        default: 'dark',
+        validator: (value) => ['light', 'dark'].includes(value)
+    }
+})
 
 const overlayStore = useOverlayStore();
 
@@ -27,7 +35,7 @@ const onCloseClick = () => {
     }
 
     @media (max-width: $breakpoint-lg) {
-        .icon {
+        .light {
             color: $basic-white;
         }
     }

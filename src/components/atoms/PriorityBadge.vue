@@ -1,6 +1,9 @@
 <template>
     <div class="priority-badge">
-        <component :is="priorityIcon" />
+        <component :is="priorityIcon" :class="[
+            props.priority,
+            { 'active': props.status === 'active' }
+        ]" />
     </div>
 </template>
 <script setup>
@@ -52,5 +55,21 @@ const priorityIcon = computed(() => {
     @include flex();
     width: 20px;
     height: 20px;
+
+    .low {
+        color: $priority-low;
+    }
+
+    .medium {
+        color: $priority-medium;
+    }
+
+    .high {
+        color: $priority-high;
+    }
+
+    .active {
+        color: $basic-white !important;
+    }
 }
 </style>

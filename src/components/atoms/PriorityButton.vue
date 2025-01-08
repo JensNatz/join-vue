@@ -1,14 +1,12 @@
 <template>
     <div class="priority-button" :class="{ 'is-selected': isSelected, [priority]: true }" @click="$emit('click')">
-        {{ priorityLabel }}
-        <component :is="iconComponent" :class="['icon', priority]"></component>
+        <span class="priority-label">{{ priorityLabel }}</span>
+        <PriorityBadge :priority="priority" :status="isSelected ? 'active' : 'inactive'" />
     </div>
 </template>
 <script setup>
 import { computed } from 'vue';
-import IconPriorityHigh from '@/components/icons/IconPriorityHigh.vue';
-import IconPriorityMedium from '@/components/icons/IconPriorityMedium.vue';
-import IconPriorityLow from '@/components/icons/IconPriorityLow.vue';
+import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
 
 const props = defineProps({
     priority: {
@@ -28,13 +26,7 @@ const priorityLabel = computed(() => {
     return props.priority.charAt(0).toUpperCase() + props.priority.slice(1);
 })
 
-const iconComponent = computed(() => {
-    return {
-        'low': IconPriorityLow,
-        'medium': IconPriorityMedium,
-        'high': IconPriorityHigh
-    }[props.priority]
-})
+
 </script>
 <style lang="scss" scoped>
 .priority-button {
@@ -52,30 +44,20 @@ const iconComponent = computed(() => {
         box-shadow: 0px 4px 8px 0px rgba($basic-black, 0.2);
     }
 
+    .priority-label {
+        @media (max-width: $breakpoint-sm) {
+            display: none;
+        }
+    }
+
     .icon {
         width: 20px;
         height: 15px;
-
-        &.low {
-            color: $priority-low;
-        }
-
-        &.medium {
-            color: $priority-medium;
-        }
-
-        &.high {
-            color: $priority-high;
-        }
     }
 
     &.is-selected {
         color: $basic-white;
         font-weight: 700;
-
-        .icon {
-            color: $basic-white;
-        }
 
         &.low {
             background-color: $priority-low;

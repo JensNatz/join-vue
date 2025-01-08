@@ -36,6 +36,11 @@ button {
     padding: 12px 16px;
     font-size: 16px;
 
+    @media (max-width: $breakpoint-md) {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
     .icon {
         width: 12px;
         height: 12px;
@@ -48,6 +53,12 @@ button {
     font-weight: 700;
     padding: 12px 24px;
 
+    @media (max-width: $breakpoint-md) {
+        font-size: 16px;
+        height: 40px;
+        padding: 8px 16px;
+    }
+
     .icon {
         width: 20px;
         height: 20px;
@@ -59,6 +70,12 @@ button {
     height: 60px;
     font-weight: 700;
     padding: 12px 24px;
+
+    @media (max-width: $breakpoint-md) {
+        font-size: 20px;
+        height: 48px;
+        padding: 8px 16px;
+    }
 
     .icon {
         width: 24px;

@@ -3,7 +3,7 @@
         <div class="task-overview-header">
             <div class="task-overview-meta">
                 <TaskCategoryBadge :category="task.category" />
-                <CloseIcon />
+                <CloseButton />
             </div>
             <h1>{{ task.title }}</h1>
         </div>
@@ -16,7 +16,7 @@
                 </div>
                 <div class="task-details-item">
                     <p class="task-label">Priority:</p>
-                    <PriorityBadge :priority="task.priority" :class="['priority-badge', task.priority]" />
+                    <PriorityBadge :priority="task.priority" />
                 </div>
             </div>
             <div class="task-overview-assigned-to">
@@ -44,24 +44,37 @@
                     <p>No subtasks</p>
                 </div>
             </div>
+            <div class="task-actions">
+                <div @click="onEditTaskClick" class="task-action-item">
+                    <IconEdit />
+                    Edit
+                </div>
+                <div @click="onDeleteTaskClick" class="task-action-item">
+                    <IconDelete />
+                    Delete
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { useTasksStore } from '@/stores/tasks';
-import { stringService } from '@/services/stringService';
+import { ref, computed } from 'vue';
 import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import TheCheckbox from '@/components/molecules/TheCheckbox.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
-import CloseIcon from '@/components/molecules/CloseButton.vue';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
-import { ref, computed } from 'vue';
+import CloseButton from '@/components/molecules/CloseButton.vue';
+import IconEdit from '@/components/icons/IconEdit.vue';
+import IconDelete from '@/components/icons/IconDelete.vue';
 import { useContactStore } from '@/stores/contact';
+import { useOverlayStore } from '@/stores/overlay';
+import { useTasksStore } from '@/stores/tasks';
+import { stringService } from '@/services/stringService';
 
 const taskStore = useTasksStore();
 const contactStore = useContactStore();
-
+const overlayStore = useOverlayStore();
 const task = ref(taskStore.getCurrentTask);
 
 const assignedContacts = computed(() => {
@@ -75,6 +88,14 @@ const handleSubtaskUpdate = async (index, value) => {
     await taskStore.updateSubtaskStatus(taskStore.currentTaskId, index, value);
 };
 
+const onEditTaskClick = () => {
+    overlayStore.setOverlayMode('editTask');
+}
+
+const onDeleteTaskClick = () => {
+    overlayStore.toggleOverlay();
+}
+
 </script>
 <style lang="scss">
 .task-overview {
@@ -84,7 +105,6 @@ const handleSubtaskUpdate = async (index, value) => {
     width: 560px;
     border-radius: 16px;
     padding: 24px;
-    max-height: 90vh;
     overflow: hidden;
 
     .task-overview-header {
@@ -107,7 +127,6 @@ const handleSubtaskUpdate = async (index, value) => {
     .task-overview-main {
         width: 100%;
         padding-right: 16px;
-        overflow-y: auto;
     }
 
     .task-label {
@@ -118,20 +137,6 @@ const handleSubtaskUpdate = async (index, value) => {
     .task-details-item {
         @include flex($align: center, $justify: start);
         gap: 16px;
-
-        .priority-badge {
-            &.low {
-                color: $priority-low;
-            }
-
-            &.medium {
-                color: $priority-medium;
-            }
-
-            &.high {
-                color: $priority-high;
-            }
-        }
     }
 
     .task-overview-assigned-to-list {
@@ -151,6 +156,21 @@ const handleSubtaskUpdate = async (index, value) => {
             @include flex($justify: start);
             gap: 16px;
             padding-left: 8px;
+        }
+    }
+
+    .task-actions {
+        @include flex($justify: end);
+        gap: 16px;
+
+        .task-action-item {
+            @include flex($justify: start);
+            gap: 8px;
+
+            &:hover {
+                cursor: pointer;
+                color: $primary-color;
+            }
         }
     }
 }

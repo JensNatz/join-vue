@@ -118,7 +118,6 @@ const onDragEnd = () => {
     min-width: fit-content;
     overflow-x: auto;
 
-
     .task-board-column {
         @include flex($justify: start, $direction: column);
         gap: 16px;

@@ -1,7 +1,7 @@
 <template>
     <div class="add-task-form">
         <div class="task-form-header">
-            <h1>Add Task</h1>
+            <h1>{{ formTitle }}</h1>
             <CloseButton />
         </div>
         <Form class="task-form" @submit="handleSubmit" :validation-schema="schema">
@@ -19,14 +19,17 @@
                 </div>
                 <TheDropdown name="category" label="Category" :options="categories" :required="true" rules="required" />
                 <SubtaskManagementForm v-model:subtasks="formSubtasks" />
-                <TheButton type="submit">Create Task</TheButton>
+                <div class="task-form-buttons">
+                    <TheButton theme="light" @click="onCancelClick">Cancel</TheButton>
+                    <TheButton type="submit">Create Task</TheButton>
+                </div>
             </div>
         </Form>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Form } from 'vee-validate';
 import * as yup from 'yup';
 import TheInput from '@/components/molecules/TheInput.vue';
@@ -61,6 +64,10 @@ const setPriority = (priority) => {
 const formSubtasks = ref([]);
 const selectedContacts = ref([]);
 
+const formTitle = computed(() => {
+    return overlayStore.overlayMode === 'createTask' ? 'Add Task' : 'Edit Task';
+});
+
 const handleSubmit = async (values) => {
     const currentStatus = taskStore.currentTaskStatus;
     const tasksInCurrentStatus = taskStore.getTasksByStatus(currentStatus);
@@ -88,8 +95,12 @@ const handleSubmit = async (values) => {
     } else {
         //TODO: Show error message from result.error
     }
-
 };
+
+const onCancelClick = () => {
+    overlayStore.toggleOverlay();
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -100,6 +111,19 @@ const handleSubmit = async (values) => {
     background-color: $basic-white;
     border-radius: 16px;
     width: 1000px;
+
+    @media (max-width: $breakpoint-lg) {
+        width: 700px;
+    }
+
+    @media (max-width: $breakpoint-md) {
+        width: 500px;
+    }
+
+    @media (max-width: $breakpoint-sm) {
+        padding: 16px;
+        width: 100%
+    }
 }
 
 .task-form-header {
@@ -112,6 +136,10 @@ const handleSubmit = async (values) => {
     @include flex($align: start, $justify: space-between);
     gap: 24px;
     width: 100%;
+
+    @media (max-width: $breakpoint-lg) {
+        @include flex($direction: column);
+    }
 }
 
 .task-form-column {
@@ -129,5 +157,11 @@ const handleSubmit = async (values) => {
         flex: 1;
         width: calc((100% - 16px) / 3);
     }
+}
+
+.task-form-buttons {
+    @include flex($align: center, $justify: space-between);
+    gap: 8px;
+    width: 100%;
 }
 </style>

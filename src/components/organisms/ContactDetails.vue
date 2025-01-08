@@ -32,7 +32,6 @@
 import { computed } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
-import { deleteFromDatabase } from '@/services/databaseService';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import IconArrowLeft from '@/components/icons/IconArrowLeft.vue';

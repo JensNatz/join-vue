@@ -1,7 +1,7 @@
 <template>
   <TheOverlay>
     <TaskOverview v-if="overlayStore.overlayMode === 'showTask'" />
-    <AddTaskForm v-if="overlayStore.overlayMode === 'createTask'" />
+    <AddTaskForm v-if="overlayStore.overlayMode === 'createTask' || overlayStore.overlayMode === 'editTask'" />
   </TheOverlay>
   <main class="board-view">
     <Suspense>
