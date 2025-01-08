@@ -5,6 +5,7 @@ export const useTasksStore = defineStore('tasks', {
   state: () => ({
     tasks: {},
     currentTaskId: '',
+    currentTaskStatus: '',
     error: null
   }),
 
@@ -35,10 +36,26 @@ export const useTasksStore = defineStore('tasks', {
       }
       
       return sortedTasks;
+    },
+
+    getTasksByStatus: (state) => {
+      return (status) => Object.values(state.tasks).filter(task => task.status === status);
     }
   },
 
   actions: {
+    async addTask(task) {
+      this.tasks[task.id] = task;
+      try {
+        await taskService.addTaskToDatabase(task)
+        return { success: true };
+      } catch (err) {
+        this.error = err.message;
+        delete this.tasks[task.id];
+        return { success: false, error: err.message };
+      }
+    },
+
     async fetchTasks() {
       try {
         this.tasks = await taskService.loadTasksFromDatabase()
@@ -73,6 +90,10 @@ export const useTasksStore = defineStore('tasks', {
 
     setCurrentTaskId(taskId) {
       this.currentTaskId = taskId;
+    },
+
+    setCurrentTaskStatus(status) {
+      this.currentTaskStatus = status;
     }
   }
 })

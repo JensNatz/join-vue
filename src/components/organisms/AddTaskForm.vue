@@ -8,7 +8,7 @@
             <div class="task-form-column">
                 <TheInput name="title" label="Title" :required="true" rules="required" />
                 <TheInput name="description" label="Description" type="textarea" />
-                <ContactAssignmentDropdown name="contacts" label="Contacts" />
+                <ContactAssignmentDropdown name="contacts" label="Contacts" v-model:selected="selectedContacts" />
             </div>
             <div class="task-form-column">
                 <TheInput name="dueDate" label="Due Date" type="date" :required="true" rules="required" />
@@ -18,7 +18,7 @@
                         @click="setPriority(priority)" />
                 </div>
                 <TheDropdown name="category" label="Category" :options="categories" :required="true" rules="required" />
-                <SubtaskManagementForm />
+                <SubtaskManagementForm v-model:subtasks="formSubtasks" />
                 <TheButton type="submit">Create Task</TheButton>
             </div>
         </Form>
@@ -37,8 +37,10 @@ import ContactAssignmentDropdown from '@/components/molecules/ContactAssignmentD
 import TheDropdown from '@/components/molecules/TheDropdown.vue';
 import SubtaskManagementForm from '@/components/organisms/SubtaskManagementForm.vue';
 import { useOverlayStore } from '@/stores/overlay';
+import { useTasksStore } from '@/stores/tasks';
 
 const overlayStore = useOverlayStore();
+const taskStore = useTasksStore();
 
 const priorities = ['high', 'medium', 'low'];
 const categories = ['User Story', 'Technical Task', 'Bug', 'Other'];
@@ -56,9 +58,37 @@ const setPriority = (priority) => {
     selectedPriority.value = priority;
 }
 
+const formSubtasks = ref([]);
+const selectedContacts = ref([]);
+
 const handleSubmit = async (values) => {
-    overlayStore.toggleOverlay();
-    console.log(values);
+    const currentStatus = taskStore.currentTaskStatus;
+    const tasksInCurrentStatus = taskStore.getTasksByStatus(currentStatus);
+    const newOrder = tasksInCurrentStatus.length;
+
+    const task = {
+        title: values.title,
+        description: values.description || '',
+        date: values.dueDate,
+        category: values.category,
+        priority: selectedPriority.value,
+        assigned_to: selectedContacts.value,
+        status: currentStatus,
+        order: newOrder,
+        subtasks: formSubtasks.value.map(subtask => ({
+            title: subtask,
+            done: false
+        }))
+    };
+
+    const result = await taskStore.addTask(task);
+    if (result.success) {
+        //TODO: Success message
+        overlayStore.toggleOverlay();
+    } else {
+        //TODO: Show error message from result.error
+    }
+
 };
 </script>
 

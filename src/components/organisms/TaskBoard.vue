@@ -2,13 +2,14 @@
     <div class="task-board">
         <div class="task-board-column" v-for="(column, status) in sortedTasks" :key="status">
             <div class="task-board-column-header">{{ getColumnTitle(status) }}</div>
-            <TheButton size="small" @click="addTask">Add Task
+            <TheButton size="small" @click="addTask(status)">Add Task
                 <template #icon>
                     <IconAdd />
                 </template>
             </TheButton>
             <VueDraggable class="task-board-tasklist" v-model="sortedTasks[status]" group="tasks" :item-key="'taskId'"
-                :data-status="status" @update="onUpdate" @add="onAdd" @remove="onRemove">
+                :data-status="status" @update="onUpdate" @add="onAdd" @remove="onRemove" @dragstart="onDragStart"
+                @dragend="onDragEnd">
                 <div v-for="task in column" :key="task.taskId">
                     <TaskCard :task="task" :taskId="task.taskId" />
                 </div>
@@ -17,7 +18,7 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useContactStore } from '@/stores/contact';
 import { useTasksStore } from '@/stores/tasks';
 import { useOverlayStore } from '@/stores/overlay';
@@ -35,6 +36,7 @@ await Promise.all([
 ]);
 
 const sortedTasks = ref({});
+const isDragging = ref(false);
 
 const getColumnTitle = computed(() => (status) => {
     const titleMap = {
@@ -45,6 +47,16 @@ const getColumnTitle = computed(() => (status) => {
     };
     return titleMap[status] || status;
 });
+
+watch(
+    () => taskStore.getSortedTasks,
+    (newTasks) => {
+        if (!isDragging.value) {
+            sortedTasks.value = JSON.parse(JSON.stringify(newTasks));
+        }
+    },
+    { immediate: true }
+);
 
 onMounted(async () => {
     sortedTasks.value = taskStore.getSortedTasks;
@@ -82,11 +94,19 @@ async function onRemove(evt) {
     }
 }
 
-async function addTask() {
+async function addTask(status) {
+    taskStore.setCurrentTaskStatus(status);
     overlayStore.toggleOverlay();
     overlayStore.setOverlayMode('createTask');
 }
 
+const onDragStart = () => {
+    isDragging.value = true;
+};
+
+const onDragEnd = () => {
+    isDragging.value = false;
+};
 
 </script>
 <style lang="scss" scoped>

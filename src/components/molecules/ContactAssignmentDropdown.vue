@@ -66,12 +66,17 @@ const hideDropdown = () => {
     isActive.value = false
 }
 
+const emit = defineEmits(['update:selected']);
+
 const toggleContact = (contact) => {
     const index = selectedContacts.value.findIndex(c => c.id === contact.id);
-    index === -1
-        ? selectedContacts.value.push(contact)
-        : selectedContacts.value.splice(index, 1);
-}
+    if (index === -1) {
+        selectedContacts.value.push(contact);
+    } else {
+        selectedContacts.value.splice(index, 1);
+    }
+    emit('update:selected', selectedContacts.value.map(contact => contact.id));
+};
 
 const displayedContacts = computed(() => {
     if (selectedContacts.value.length > 6) {

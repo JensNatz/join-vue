@@ -35,7 +35,7 @@ import IconCheckmark from '@/components/icons/IconCheckmark.vue';
 import IconCancel from '@/components/icons/IconCancel.vue';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const subtaskInput = ref('');
 const subtasks = ref([]);
@@ -70,6 +70,12 @@ const onDeleteClick = (index) => {
     subtasks.value.splice(index, 1);
     editingIndex.value = -1;
 };
+
+watch(subtasks, (newSubtasks) => {
+    emit('update:subtasks', newSubtasks);
+}, { deep: true });
+
+const emit = defineEmits(['update:subtasks']);
 
 </script>
 
