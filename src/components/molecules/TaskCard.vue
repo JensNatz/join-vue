@@ -13,7 +13,7 @@
                     <InitialsBadge size="small" :number="remainingContactsCount" />
                 </template>
             </div>
-            <PriorityBadge :priority="task.priority" />
+            <PriorityBadge :priority="task.priority" :class="['priority-badge', task.priority]" />
         </div>
     </div>
 </template>
@@ -75,7 +75,7 @@ const onTaskCardClick = () => {
 };
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .task-card {
     @include flex($direction: column, $align: start, $justify: start);
     width: 252px;
@@ -114,6 +114,20 @@ const onTaskCardClick = () => {
 
             &>*:not(:first-child) {
                 margin-left: -8px;
+            }
+        }
+
+        .priority-badge {
+            &.low {
+                color: $priority-low;
+            }
+
+            &.medium {
+                color: $priority-medium;
+            }
+
+            &.high {
+                color: $priority-high;
             }
         }
     }

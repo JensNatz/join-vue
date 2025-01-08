@@ -16,7 +16,7 @@
                 </div>
                 <div class="task-details-item">
                     <p class="task-label">Priority:</p>
-                    <PriorityBadge :priority="task.priority" />
+                    <PriorityBadge :priority="task.priority" :class="['priority-badge', task.priority]" />
                 </div>
             </div>
             <div class="task-overview-assigned-to">
@@ -118,6 +118,20 @@ const handleSubtaskUpdate = async (index, value) => {
     .task-details-item {
         @include flex($align: center, $justify: start);
         gap: 16px;
+
+        .priority-badge {
+            &.low {
+                color: $priority-low;
+            }
+
+            &.medium {
+                color: $priority-medium;
+            }
+
+            &.high {
+                color: $priority-high;
+            }
+        }
     }
 
     .task-overview-assigned-to-list {
