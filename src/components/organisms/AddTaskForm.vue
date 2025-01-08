@@ -4,11 +4,11 @@
             <h1>{{ formTitle }}</h1>
             <CloseButton />
         </div>
-        <Form class="task-form" @submit="handleSubmit" :validation-schema="schema">
+        <Form class="task-form" @submit="handleSubmit" :validation-schema="schema" :initial-values="initialFormValues">
             <div class="task-form-column">
                 <TheInput name="title" label="Title" :required="true" rules="required" />
                 <TheInput name="description" label="Description" type="textarea" />
-                <ContactAssignmentDropdown name="contacts" label="Contacts" v-model:selected="selectedContacts" />
+                <ContactAssignmentDropdown name="contacts" label="Contacts" v-model="selectedContacts" />
             </div>
             <div class="task-form-column">
                 <TheInput name="dueDate" label="Due Date" type="date" :required="true" rules="required" />
@@ -17,7 +17,8 @@
                         :priority="priority" :isSelected="selectedPriority === priority"
                         @click="setPriority(priority)" />
                 </div>
-                <TheDropdown name="category" label="Category" :options="categories" :required="true" rules="required" />
+                <TheDropdown name="category" label="Category" :options="categories" :required="true" rules="required"
+                    :initialValue="initialFormValues.category" />
                 <SubtaskManagementForm v-model:subtasks="formSubtasks" />
                 <div class="task-form-buttons">
                     <TheButton theme="light" @click="onCancelClick">Cancel</TheButton>
@@ -41,13 +42,51 @@ import TheDropdown from '@/components/molecules/TheDropdown.vue';
 import SubtaskManagementForm from '@/components/organisms/SubtaskManagementForm.vue';
 import { useOverlayStore } from '@/stores/overlay';
 import { useTasksStore } from '@/stores/tasks';
+import { useContactStore } from '@/stores/contact';
 
 const overlayStore = useOverlayStore();
 const taskStore = useTasksStore();
+const contactStore = useContactStore();
 
 const priorities = ['high', 'medium', 'low'];
 const categories = ['User Story', 'Technical Task', 'Bug', 'Other'];
-const selectedPriority = ref('medium');
+
+const initialPriority = computed(() =>
+    overlayStore.overlayMode === 'editTask'
+        ? taskStore.getCurrentTask.priority
+        : 'medium'
+);
+
+const initialContacts = computed(() => {
+    if (overlayStore.overlayMode === 'editTask') {
+        const assignedIds = taskStore.getCurrentTask.assigned_to;
+        return assignedIds.map(id => contactStore.getContactInfoById(id))
+            .filter(contact => contact !== null);
+    }
+    return [];
+});
+
+const selectedPriority = ref(initialPriority.value);
+const selectedContacts = ref(initialContacts.value);
+const formSubtasks = ref([]);
+
+const initialFormValues = computed(() => {
+    if (overlayStore.overlayMode === 'editTask') {
+        const task = taskStore.getCurrentTask;
+        return {
+            title: task.title,
+            description: task.description,
+            dueDate: task.date,
+            category: task.category
+        };
+    }
+    return {
+        title: '',
+        description: '',
+        dueDate: '',
+        category: ''
+    };
+});
 
 const schema = yup.object({
     title: yup.string().required('Title is required'),
@@ -61,8 +100,6 @@ const setPriority = (priority) => {
     selectedPriority.value = priority;
 }
 
-const formSubtasks = ref([]);
-const selectedContacts = ref([]);
 
 const formTitle = computed(() => {
     return overlayStore.overlayMode === 'createTask' ? 'Add Task' : 'Edit Task';

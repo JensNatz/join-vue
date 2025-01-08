@@ -22,7 +22,7 @@ contactStore.fetchContacts();
 const sortedContacts = computed(() => contactStore.getContactsSortedByLetter);
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .contacts-list {
     width: 100%;
     height: 100%;

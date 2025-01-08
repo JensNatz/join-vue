@@ -16,7 +16,8 @@
                     {{ contact.name }}
                 </div>
                 <TheCheckbox :checked="selectedContacts.some(c => c.id === contact.id)"
-                    @update:checked="toggleContact(contact)" />
+                    @update:checked="toggleContact(contact)"
+                    @mouseover="console.log('Contact:', contact.id, 'Selected:', selectedContacts.map(c => c.id))" />
             </div>
         </div>
         <div class="contacts-list">
@@ -30,7 +31,7 @@
     </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import TheLabel from '@/components/atoms/TheLabel.vue';
 import IconDropdownArrowDown from '@/components/icons/IconDropdownArrowDown.vue';
 import IconDropdownArrowUp from '@/components/icons/IconDropdownArrowUp.vue';
@@ -39,8 +40,6 @@ import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import { useContactStore } from '@/stores/contact';
 const contactStore = useContactStore();
 const contacts = ref(contactStore.getContactsSortedByAlphabet);
-
-const selectedContacts = ref([]);
 
 const props = defineProps({
     name: {
@@ -54,8 +53,22 @@ const props = defineProps({
     required: {
         type: Boolean,
         default: false
+    },
+    modelValue: {
+        type: Array,
+        default: () => []
     }
-})
+});
+
+const selectedContacts = ref(props.modelValue);
+
+console.log('selectedContacts', selectedContacts.value);
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        selectedContacts.value = newValue;
+    }
+);
 
 const isActive = ref(false)
 const toggleDropdown = () => {
@@ -141,8 +154,6 @@ const remainingContacts = computed(() => {
                 @include flex($justify: start);
                 gap: 8px;
             }
-
-
         }
     }
 
@@ -150,7 +161,7 @@ const remainingContacts = computed(() => {
         @include flex($justify: start);
         gap: 2px;
         padding: 8px 0;
-        height: 40px;
+        height: 48px;
     }
 }
 </style>

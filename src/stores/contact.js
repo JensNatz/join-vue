@@ -59,7 +59,10 @@ export const useContactStore = defineStore('contact', {
     },
 
     getContactInfoById(contactId) {
-      return this.contacts[contactId];
+      return {
+        id: contactId,
+        ...this.contacts[contactId]
+      };
     },
     
     addToContacts(contact) {

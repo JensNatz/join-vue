@@ -37,12 +37,16 @@ const props = defineProps({
     required: {
         type: Boolean,
         default: false
+    },
+    initialValue: {
+        type: String,
+        default: null
     }
 })
 
 const { value: fieldValue, handleChange } = useField(props.name);
 const isActive = ref(false)
-const selectedOption = ref(null)
+const selectedOption = ref(props.initialValue || null)
 
 watch(selectedOption, (newValue) => {
     handleChange(newValue);
