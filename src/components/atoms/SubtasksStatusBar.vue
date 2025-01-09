@@ -8,23 +8,37 @@
 </template>
 <script setup>
 import { computed } from 'vue';
+import { useTasksStore } from '@/stores/tasks';
 
 const props = defineProps({
-    subtasks: {
-        type: Array,
+    taskId: {
+        type: String,
         required: true
     }
 });
 
+const taskStore = useTasksStore();
+
+const subtasks = computed(() => {
+    const task = taskStore.getTaskById(props.taskId);
+    return task?.subtasks || [];
+});
+
+const completedSubtasks = computed(() =>
+    subtasks.value.filter(subtask => subtask.done).length
+);
+
+const totalSubtasks = computed(() =>
+    subtasks.value.length
+);
+
 const statusBarWidth = computed(() => {
-    const completedTasks = props.subtasks.filter(task => task.done).length;
-    return `${(completedTasks / props.subtasks.length) * 100}%`;
+    return `${(completedSubtasks.value / totalSubtasks.value) * 100}%`;
 });
 
 const numberOfCompletedSubtasks = computed(() => {
-    return `${props.subtasks.filter(task => task.done).length} / ${props.subtasks.length} Subtasks`;
+    return `${completedSubtasks.value} / ${totalSubtasks.value} Subtasks`;
 });
-
 
 </script>
 <style lang="scss">

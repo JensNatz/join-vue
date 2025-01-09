@@ -33,7 +33,7 @@
             </div>
             <div class="task-overview-subtasks">
                 <p class="task-label">Subtasks:</p>
-                <div v-if="task.subtasks.length > 0" class="task-overview-subtasks-list">
+                <div v-if="task.subtasks" class="task-overview-subtasks-list">
                     <div class="task-overview-subtasks-item" v-for="(subtask, index) in task.subtasks">
                         <TheCheckbox :checked="subtask.done"
                             @update:checked="(value) => handleSubtaskUpdate(index, value)" />
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
 import TheCheckbox from '@/components/molecules/TheCheckbox.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
@@ -75,7 +75,7 @@ import { stringService } from '@/services/stringService';
 const taskStore = useTasksStore();
 const contactStore = useContactStore();
 const overlayStore = useOverlayStore();
-const task = ref(taskStore.getCurrentTask);
+const task = computed(() => taskStore.getCurrentTask);
 
 const assignedContacts = computed(() => {
     return task.value.assigned_to?.map(contact =>
@@ -84,7 +84,8 @@ const assignedContacts = computed(() => {
 });
 
 const handleSubtaskUpdate = async (index, value) => {
-    task.value.subtasks[index].done = value;
+    console.log('index', index);
+    console.log('value', value);
     await taskStore.updateSubtaskStatus(taskStore.currentTaskId, index, value);
 };
 
@@ -93,6 +94,8 @@ const onEditTaskClick = () => {
 }
 
 const onDeleteTaskClick = () => {
+    //TODO: Show confirmation dialog
+    taskStore.deleteTask(taskStore.currentTaskId);
     overlayStore.toggleOverlay();
 }
 

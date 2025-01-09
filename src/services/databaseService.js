@@ -32,7 +32,6 @@ export async function updateOnDatabase(path, data) {
     return responseToJson;
 }
 
-
 export async function deleteFromDatabase(path) {
     let response = await fetch(FIREBASE_URL + path + ".json", {
         method: "DELETE",

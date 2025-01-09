@@ -22,7 +22,7 @@
                 <SubtaskManagementForm v-model:subtasks="formSubtasks" />
                 <div class="task-form-buttons">
                     <TheButton theme="light" @click="onCancelClick">Cancel</TheButton>
-                    <TheButton type="submit">Create Task</TheButton>
+                    <TheButton type="submit">{{ buttonText }}</TheButton>
                 </div>
             </div>
         </Form>
@@ -68,7 +68,11 @@ const initialContacts = computed(() => {
 
 const selectedPriority = ref(initialPriority.value);
 const selectedContacts = ref(initialContacts.value);
-const formSubtasks = ref([]);
+const formSubtasks = ref(
+    overlayStore.overlayMode === 'editTask'
+        ? taskStore.getCurrentTask.subtasks  // Pass complete subtask objects { title, done }
+        : []
+);
 
 const initialFormValues = computed(() => {
     if (overlayStore.overlayMode === 'editTask') {
@@ -100,9 +104,12 @@ const setPriority = (priority) => {
     selectedPriority.value = priority;
 }
 
-
 const formTitle = computed(() => {
     return overlayStore.overlayMode === 'createTask' ? 'Add Task' : 'Edit Task';
+});
+
+const buttonText = computed(() => {
+    return overlayStore.overlayMode === 'createTask' ? 'Create Task' : 'Save';
 });
 
 const handleSubmit = async (values) => {
@@ -110,22 +117,28 @@ const handleSubmit = async (values) => {
     const tasksInCurrentStatus = taskStore.getTasksByStatus(currentStatus);
     const newOrder = tasksInCurrentStatus.length;
 
-    const task = {
+    const taskData = {
         title: values.title,
         description: values.description || '',
         date: values.dueDate,
         category: values.category,
         priority: selectedPriority.value,
-        assigned_to: selectedContacts.value,
-        status: currentStatus,
-        order: newOrder,
-        subtasks: formSubtasks.value.map(subtask => ({
-            title: subtask,
-            done: false
-        }))
+        assigned_to: selectedContacts.value.map(contact => contact.id),
+        subtasks: formSubtasks.value
     };
 
-    const result = await taskStore.addTask(task);
+    let result;
+
+    if (overlayStore.overlayMode === 'createTask') {
+        taskData.status = currentStatus;
+        taskData.order = newOrder;
+        result = await taskStore.addTask(taskData);
+    } else {
+        taskData.status = taskStore.getCurrentTask.status;
+        taskData.order = taskStore.getCurrentTask.order;
+        result = await taskStore.updateTask(taskStore.currentTaskId, taskData);
+    }
+
     if (result.success) {
         //TODO: Success message
         overlayStore.toggleOverlay();

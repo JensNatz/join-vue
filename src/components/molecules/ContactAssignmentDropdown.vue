@@ -16,8 +16,7 @@
                     {{ contact.name }}
                 </div>
                 <TheCheckbox :checked="selectedContacts.some(c => c.id === contact.id)"
-                    @update:checked="toggleContact(contact)"
-                    @mouseover="console.log('Contact:', contact.id, 'Selected:', selectedContacts.map(c => c.id))" />
+                    @update:checked="toggleContact(contact)" />
             </div>
         </div>
         <div class="contacts-list">
@@ -62,7 +61,6 @@ const props = defineProps({
 
 const selectedContacts = ref(props.modelValue);
 
-console.log('selectedContacts', selectedContacts.value);
 watch(
     () => props.modelValue,
     (newValue) => {

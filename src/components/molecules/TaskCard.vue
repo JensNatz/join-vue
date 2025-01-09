@@ -3,7 +3,7 @@
         <TaskCategoryBadge :category="task.category" />
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
-        <SubtasksStatusBar v-if="task.subtasks" :subtasks="task.subtasks" />
+        <SubtasksStatusBar v-if="task.subtasks" :taskId="taskId" />
         <div class="task-card-bottom">
             <div class="task-card-assigned-to">
                 <template v-if="task.assigned_to" v-for="contactId in displayedContacts">

@@ -1,4 +1,4 @@
-import { loadFromDatabase, updateOnDatabase, postToDatabase } from '@/services/databaseService';
+import { loadFromDatabase, updateOnDatabase, postToDatabase, deleteFromDatabase } from '@/services/databaseService';
 
 export async function loadTasksFromDatabase() {
     const tasks = await loadFromDatabase('tasks');
@@ -7,6 +7,14 @@ export async function loadTasksFromDatabase() {
 
 export async function addTaskToDatabase(task) {
     await postToDatabase('tasks', task);
+}
+
+export async function updateTaskOnDatabase(taskId, taskData) {
+    await updateOnDatabase(`tasks/${taskId}`, taskData);
+}
+
+export async function deleteTaskFromDatabase(taskId) {
+    await deleteFromDatabase(`tasks/${taskId}`);
 }
 
 export async function updateTaskOrder(taskId, newIndex) {

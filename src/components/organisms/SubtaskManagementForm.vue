@@ -12,7 +12,7 @@
         </div>
         <div class="subtask-list">
             <div class="subtask" v-for="(subtask, index) in subtasks" :key="index">
-                <input type="text" class="subtask-input" :value="subtask" :readonly="editingIndex !== index"
+                <input type="text" class="subtask-input" :value="subtask.title" :readonly="editingIndex !== index"
                     :ref="el => subtaskInputs[index] = el" />
                 <div class="subtask-controls">
                     <div class="input-controls" v-if="editingIndex !== index">
@@ -37,8 +37,15 @@ import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import { ref, watch } from 'vue';
 
+const props = defineProps({
+    subtasks: {
+        type: Array,
+        default: () => []
+    }
+});
+
+const emit = defineEmits(['update:subtasks']);
 const subtaskInput = ref('');
-const subtasks = ref([]);
 const editingIndex = ref(-1);
 const subtaskInputs = ref([]);
 
@@ -47,12 +54,18 @@ const onInputChange = () => {
 }
 
 const onCancelClick = () => {
+    subtaskInput.value = '';
     editingIndex.value = -1;
 };
 
 const onAddClick = () => {
     if (subtaskInput.value) {
-        subtasks.value.push(subtaskInput.value);
+        const newSubtasks = [...props.subtasks];
+        newSubtasks.push({
+            title: subtaskInput.value,
+            done: false
+        });
+        emit('update:subtasks', newSubtasks);
         subtaskInput.value = '';
     }
 };
@@ -62,21 +75,21 @@ const onEditClick = (index) => {
 };
 
 const onSaveClick = (index, value) => {
-    subtasks.value[index] = value;
+    const newSubtasks = [...props.subtasks];
+    newSubtasks[index] = {
+        ...newSubtasks[index],
+        title: value
+    };
+    emit('update:subtasks', newSubtasks);
     editingIndex.value = -1;
 };
 
 const onDeleteClick = (index) => {
-    subtasks.value.splice(index, 1);
+    const newSubtasks = [...props.subtasks];
+    newSubtasks.splice(index, 1);
+    emit('update:subtasks', newSubtasks);
     editingIndex.value = -1;
 };
-
-watch(subtasks, (newSubtasks) => {
-    emit('update:subtasks', newSubtasks);
-}, { deep: true });
-
-const emit = defineEmits(['update:subtasks']);
-
 </script>
 
 <style lang="scss" scoped>

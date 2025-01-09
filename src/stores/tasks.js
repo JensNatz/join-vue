@@ -40,6 +40,10 @@ export const useTasksStore = defineStore('tasks', {
 
     getTasksByStatus: (state) => {
       return (status) => Object.values(state.tasks).filter(task => task.status === status);
+    },
+
+    getTaskById: (state) => {
+      return (taskId) => state.tasks[taskId];
     }
   },
 
@@ -52,6 +56,31 @@ export const useTasksStore = defineStore('tasks', {
       } catch (err) {
         this.error = err.message;
         delete this.tasks[task.id];
+        return { success: false, error: err.message };
+      }
+    },
+
+    async updateTask(taskId, taskData) {
+      const backupTask = this.tasks[taskId];
+      this.tasks[taskId] = taskData;
+      try {
+        await taskService.updateTaskOnDatabase(taskId, taskData);
+        return { success: true };
+      } catch (err) {
+        this.tasks[taskId] = backupTask;
+        return { success: false, error: err.message };
+      }
+    },
+
+    async deleteTask(taskId) {
+      const backupTask = this.tasks[taskId];
+      delete this.tasks[taskId];
+      try {
+        await taskService.deleteTaskFromDatabase(taskId);
+        return { success: true };
+
+      } catch (err) {
+        this.tasks[taskId] = backupTask;
         return { success: false, error: err.message };
       }
     },
@@ -81,9 +110,12 @@ export const useTasksStore = defineStore('tasks', {
     },
 
     async updateSubtaskStatus(taskId, subtaskId, newStatus) {
+      const backupSubtask = this.tasks[taskId].subtasks[subtaskId];
+      this.tasks[taskId].subtasks[subtaskId].done = newStatus;
       try {
       await taskService.updateSubtaskStatus(taskId, subtaskId, newStatus)
       } catch (err) {
+        this.tasks[taskId].subtasks[subtaskId].done = backupSubtask.done;
         this.error = err.message
       }
     },
