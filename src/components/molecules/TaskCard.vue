@@ -3,7 +3,7 @@
         <TaskCategoryBadge :category="task.category" />
         <h2>{{ stringService.truncate(task.title, 30) }}</h2>
         <span>{{ stringService.truncate(task.description, 50) }}</span>
-        <SubtasksStatusBar v-if="task.subtasks" :taskId="taskId" />
+        <SubtasksStatusBar v-if="task.subtasks && task.subtasks.length > 0" :taskId="taskId" />
         <div class="task-card-bottom">
             <div class="task-card-assigned-to">
                 <template v-if="task.assigned_to" v-for="contactId in displayedContacts">
@@ -18,15 +18,15 @@
     </div>
 </template>
 <script setup>
-import { stringService } from '@/services/stringService';
+import { computed } from 'vue';
 import SubtasksStatusBar from '@/components/atoms/SubtasksStatusBar.vue';
 import PriorityBadge from '@/components/atoms/PriorityBadge.vue';
+import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
+import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
+import { stringService } from '@/services/stringService';
 import { useContactStore } from '@/stores/contact';
 import { useTasksStore } from '@/stores/tasks';
 import { useOverlayStore } from '@/stores/overlay';
-import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
-import TaskCategoryBadge from '@/components/atoms/TaskCategoryBadge.vue';
-import { computed } from 'vue';
 
 const props = defineProps({
     task: {

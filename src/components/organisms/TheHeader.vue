@@ -7,9 +7,9 @@
     </header>
 </template>
 <script setup>
-import IconLogoWhite from '../icons/IconLogoWhite.vue'
+import IconLogoWhite from '@/components/icons/IconLogoWhite.vue'
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .the-header {
     background-color: $primary-color;
     box-shadow: 0px 4px 4px 0px rgba($basic-black, 0.1);

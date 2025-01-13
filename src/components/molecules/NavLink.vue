@@ -1,5 +1,5 @@
 <template>
-    <router-link class="nav-link" :to="to">
+    <router-link class="nav-link" :to="to" :class="{ 'active': active }">
         <component class="nav-link-icon" :is="icon" />
         {{ title }}
     </router-link>
@@ -15,6 +15,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    active: {
+        type: Boolean,
+        default: false
+    },
     to: {
         type: [String, Object],
         required: true
@@ -22,7 +26,7 @@ const props = defineProps({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .nav-link {
     @include flex($justify: start);
     gap: 16px;
@@ -39,6 +43,15 @@ const props = defineProps({
         background-color: $primary-color-light;
     }
 
+    &.active {
+        color: $basic-white;
+        background-color: $primary-color;
+
+        .nav-link-icon {
+            color: $basic-white;
+        }
+    }
+
     @media (max-width: $breakpoint-lg) {
         @include flex();
         height: 100%;
@@ -46,6 +59,8 @@ const props = defineProps({
         flex: 1;
         padding: 4px 16px;
     }
+
+
 
     @media (max-width: $breakpoint-md) {
         @include flex($direction: column);

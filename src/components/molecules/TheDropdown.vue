@@ -16,9 +16,9 @@
 <script setup>
 import { ref, watch } from 'vue';
 import TheLabel from '@/components/atoms/TheLabel.vue';
-import { ErrorMessage } from 'vee-validate'
 import IconDropdownArrowDown from '@/components/icons/IconDropdownArrowDown.vue';
 import IconDropdownArrowUp from '@/components/icons/IconDropdownArrowUp.vue';
+import { ErrorMessage } from 'vee-validate'
 import { useField } from 'vee-validate';
 
 const props = defineProps({

@@ -19,12 +19,12 @@
 </template>
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
+import TaskCard from '@/components/molecules/TaskCard.vue';
+import TheButton from '@/components/atoms/TheButton.vue';
+import IconAdd from '@/components/icons/IconAdd.vue';
 import { useContactStore } from '@/stores/contact';
 import { useTasksStore } from '@/stores/tasks';
 import { useOverlayStore } from '@/stores/overlay';
-import TaskCard from '../molecules/TaskCard.vue';
-import TheButton from '@/components/atoms/TheButton.vue';
-import IconAdd from '@/components/icons/IconAdd.vue';
 import { VueDraggable } from 'vue-draggable-plus';
 
 const contactStore = useContactStore();
@@ -40,7 +40,7 @@ const isDragging = ref(false);
 
 const getColumnTitle = computed(() => (status) => {
     const titleMap = {
-        'to-do': 'To-Do',
+        'to-do': 'Backlog',
         'progress': 'In Progress',
         'feedback': 'Awaiting Feedback',
         'done': 'Done',
@@ -117,6 +117,7 @@ const onDragEnd = () => {
     flex-shrink: 0;
     min-width: fit-content;
     overflow-x: auto;
+    padding: 16px;
 
     .task-board-column {
         @include flex($justify: start, $direction: column);
@@ -134,7 +135,7 @@ const onDragEnd = () => {
         .task-board-tasklist {
             @include flex($justify: start, $direction: column);
             gap: 8px;
-            height: 100%;
+            height: fit-content;
             padding: 8px;
             width: 100%;
         }

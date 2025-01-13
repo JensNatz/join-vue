@@ -22,7 +22,7 @@ const props = defineProps({
 defineEmits(['update:checked']);
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .the-checkbox {
     @include flex();
 

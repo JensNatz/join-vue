@@ -1,23 +1,31 @@
 <template>
     <nav class="navbar">
         <div class="navbar-links">
-            <NavLink title="Summary" :icon="IconSummary" to="/" />
-            <NavLink title="Board" :icon="IconBoard" to="/board" />
-            <NavLink title="Contacts" :icon="IconContacts" to="/contacts" />
+            <NavLink title="Dashboard" :icon="IconSummary" to="/" :active="isCurrentRoute('/')" />
+            <NavLink title="Board" :icon="IconBoard" to="/board" :active="isCurrentRoute('/board')" />
+            <NavLink title="Contacts" :icon="IconContacts" to="/contacts" :active="isCurrentRoute('/contacts')" />
         </div>
         <div class="metalinks">
-            <router-link to="/">Privacy Policy</router-link>
-            <router-link to="/imprint">Imprint</router-link>
+            <router-link to="/privacy" class="metalinks-link"
+                :class="{ 'active': isCurrentRoute('/privacy-policy') }">Privacy
+                Policy</router-link>
+            <router-link to="/imprint" class="metalinks-link"
+                :class="{ 'active': isCurrentRoute('/imprint') }">Imprint</router-link>
         </div>
     </nav>
 </template>
 <script setup>
-import NavLink from '../molecules/NavLink.vue'
-import IconSummary from '../icons/IconSummary.vue'
-import IconBoard from '../icons/IconBoard.vue'
-import IconContacts from '../icons/IconContacts.vue'
+import { useRoute } from 'vue-router'
+import NavLink from '@/components/molecules/NavLink.vue'
+import IconSummary from '@/components/icons/IconSummary.vue'
+import IconBoard from '@/components/icons/IconBoard.vue'
+import IconContacts from '@/components/icons/IconContacts.vue'
+
+const route = useRoute()
+
+const isCurrentRoute = (path) => route.path === path
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .navbar {
     @include flex($justify: space-between, $direction: column);
     box-shadow: 0px 0px 4px 0px rgba($basic-black, 0.2);
@@ -47,8 +55,16 @@ import IconContacts from '../icons/IconContacts.vue'
     }
 
     .metalinks {
+
         @media (max-width: $breakpoint-lg) {
             display: none;
+        }
+
+        .metalinks-link {
+            &.active {
+                color: $primary-color;
+                font-weight: 600;
+            }
         }
     }
 

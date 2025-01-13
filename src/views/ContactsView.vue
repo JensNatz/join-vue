@@ -1,4 +1,5 @@
 <template>
+  <ToastMessage />
   <TheOverlay>
     <EditContactForm v-if="overlayStore.overlayMode === 'editContact'" />
     <AddContactForm v-if="overlayStore.overlayMode === 'createContact'" />
@@ -22,9 +23,11 @@
     <MobileOptionsMenu class="mobile-options-menu" v-click-outside="onOutsideClick" @click="closeOptionsMenu" />
   </div>
   <FloatingActionButton :type="floatingActionType" @click.stop="onFloatingActionClick" />
+  <TheDialog v-if="dialogStore.isVisible" />
 </template>
 <script setup>
 import { computed, ref } from 'vue';
+import ToastMessage from '@/components/molecules/ToastMessage.vue';
 import TheOverlay from '@/components/molecules/TheOverlay.vue';
 import EditContactForm from '@/components/organisms/EditContactForm.vue';
 import ContactsList from '@/components/organisms/ContactsList.vue'
@@ -34,13 +37,20 @@ import IconAddContact from '@/components/icons/IconAddContact.vue';
 import AddContactForm from '@/components/organisms/AddContactForm.vue';
 import FloatingActionButton from '@/components/molecules/FloatingActionButton.vue';
 import MobileOptionsMenu from '@/components/organisms/MobileOptionsMenu.vue';
+import TheDialog from '@/components/molecules/TheDialog.vue';
+import { resetDatabase } from '@/services/securityService';
 import { useOverlayStore } from '@/stores/overlay';
 import { useContactStore } from '@/stores/contact';
+import { useDialogStore } from '@/stores/dialog';
 import { vClickOutside } from '@/directives/click-outside';
 
 const overlayStore = useOverlayStore();
 const contactStore = useContactStore();
+const dialogStore = useDialogStore();
 
+resetDatabase(); // Just for demo purposes
+
+contactStore.currentContactId = null;
 const onAddContactClick = () => {
   overlayStore.setOverlayMode('createContact');
   overlayStore.toggleOverlay();

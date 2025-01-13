@@ -71,10 +71,14 @@ import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
 import { useTasksStore } from '@/stores/tasks';
 import { stringService } from '@/services/stringService';
+import { useToastStore } from '@/stores/toast';
+import { useDialogStore } from '@/stores/dialog';
 
+const dialogStore = useDialogStore();
 const taskStore = useTasksStore();
 const contactStore = useContactStore();
 const overlayStore = useOverlayStore();
+const toastStore = useToastStore();
 const task = computed(() => taskStore.getCurrentTask);
 
 const assignedContacts = computed(() => {
@@ -84,8 +88,6 @@ const assignedContacts = computed(() => {
 });
 
 const handleSubtaskUpdate = async (index, value) => {
-    console.log('index', index);
-    console.log('value', value);
     await taskStore.updateSubtaskStatus(taskStore.currentTaskId, index, value);
 };
 
@@ -94,13 +96,26 @@ const onEditTaskClick = () => {
 }
 
 const onDeleteTaskClick = () => {
-    //TODO: Show confirmation dialog
-    taskStore.deleteTask(taskStore.currentTaskId);
-    overlayStore.toggleOverlay();
+    dialogStore.showDialog({
+        title: 'Are you sure you want to delete this task?',
+        subline: 'This action cannot be undone.',
+        onConfirm: async () => {
+            const result = await taskStore.deleteTask(taskStore.currentTaskId);
+            if (result.success) {
+                toastStore.showToast('Task deleted successfully!');
+                overlayStore.toggleOverlay();
+            } else {
+                toastStore.showToast('Something went wrong, please try again.', 'error');
+            }
+        },
+        onCancel: () => {
+            dialogStore.hideDialog();
+        }
+    });
 }
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .task-overview {
     @include flex($direction: column, $align: start, $justify: start);
     gap: 8px;
@@ -109,6 +124,10 @@ const onDeleteTaskClick = () => {
     border-radius: 16px;
     padding: 24px;
     overflow: hidden;
+
+    @media (max-width: $breakpoint-md) {
+        width: 100%;
+    }
 
     .task-overview-header {
         @include flex($direction: column, $align: start, $justify: start);
@@ -122,8 +141,6 @@ const onDeleteTaskClick = () => {
     }
 
     h1 {
-        font-size: 48px;
-        line-height: 56px;
         color: $basic-black;
     }
 
@@ -165,6 +182,7 @@ const onDeleteTaskClick = () => {
     .task-actions {
         @include flex($justify: end);
         gap: 16px;
+        padding-top: 16px;
 
         .task-action-item {
             @include flex($justify: start);

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { loadFromDatabase, postToDatabase, updateOnDatabase, deleteFromDatabase } from '@/services/databaseService';
+import { useTasksStore } from '@/stores/tasks';
 
 export const useContactStore = defineStore('contact', {
   state: () => ({ contacts: {}, currentContactId: null, sortedContacts: {} }),
@@ -78,12 +79,19 @@ export const useContactStore = defineStore('contact', {
       this.deleteContactById(contactId);
       this.clearCurrentContactId();
 
+      const tasksStore = useTasksStore();
+      const result = await tasksStore.removeContactFromAllTasks(contactId);
+      if (!result.success) {
+        this.addToContacts(contactBackup);
+        return { success: false };
+      }
+
       try {
         await deleteFromDatabase(`contacts/${contactId}`);
         return { success: true };
       } catch (error) {
         this.addToContacts(contactBackup);
-        return { success: false, error: error.message };
+        return { success: false };
       }
     },
 
@@ -96,7 +104,7 @@ export const useContactStore = defineStore('contact', {
         return { success: true };
       } catch (error) {
         this.contacts[updatedContact.id] = previousContact;
-        return { success: false, error: error.message };
+        return { success: false };
       }
     },
 
@@ -109,7 +117,7 @@ export const useContactStore = defineStore('contact', {
         this.setCurrentContactId(newContactId);
         return { success: true, contactId: newContactId };
       } catch (error) {
-        return { success: false, error: error.message };
+        return { success: false};
       }
     }
   }

@@ -23,7 +23,7 @@ const props = defineProps({
 const categoryClass = computed(() => CATEGORY_CLASSES[props.category]);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .task-category-badge {
     border-radius: 10px;
     padding: 4px 8px;

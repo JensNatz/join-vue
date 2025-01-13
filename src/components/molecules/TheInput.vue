@@ -1,6 +1,6 @@
 <template>
     <div class="the-input">
-        <TheLabel :label="label" :htmlFor="name" :marksRequired="required" class="label" />
+        <TheLabel v-if="label" :label="label" :htmlFor="name" :marksRequired="required" class="label" />
         <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }"
             :as="type === 'textarea' ? 'textarea' : 'input'" />
         <component :is="iconComponent" class="input-icon" />
@@ -9,11 +9,11 @@
 </template>
 <script setup>
 import { computed } from 'vue';
-import { Field, ErrorMessage } from 'vee-validate'
 import TheLabel from '@/components/atoms/TheLabel.vue';
-import IconPerson from '../icons/IconPerson.vue';
-import IconEmail from '../icons/IconEmail.vue';
-import IconPhone from '../icons/IconPhone.vue';
+import IconPerson from '@/components/icons/IconPerson.vue';
+import IconEmail from '@/components/icons/IconEmail.vue';
+import IconPhone from '@/components/icons/IconPhone.vue';
+import { Field, ErrorMessage } from 'vee-validate'
 
 const modelValue = defineModel()
 

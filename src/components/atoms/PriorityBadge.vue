@@ -50,7 +50,7 @@ const priorityIcon = computed(() => {
 });
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .priority-badge {
     @include flex();
     width: 20px;

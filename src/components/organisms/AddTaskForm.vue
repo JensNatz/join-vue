@@ -31,8 +31,6 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Form } from 'vee-validate';
-import * as yup from 'yup';
 import TheInput from '@/components/molecules/TheInput.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
 import PriorityButton from '@/components/atoms/PriorityButton.vue';
@@ -43,10 +41,14 @@ import SubtaskManagementForm from '@/components/organisms/SubtaskManagementForm.
 import { useOverlayStore } from '@/stores/overlay';
 import { useTasksStore } from '@/stores/tasks';
 import { useContactStore } from '@/stores/contact';
+import { useToastStore } from '@/stores/toast';
+import { Form } from 'vee-validate';
+import * as yup from 'yup';
 
 const overlayStore = useOverlayStore();
 const taskStore = useTasksStore();
 const contactStore = useContactStore();
+const toastStore = useToastStore();
 
 const priorities = ['high', 'medium', 'low'];
 const categories = ['User Story', 'Technical Task', 'Bug', 'Other'];
@@ -59,7 +61,8 @@ const initialPriority = computed(() =>
 
 const initialContacts = computed(() => {
     if (overlayStore.overlayMode === 'editTask') {
-        const assignedIds = taskStore.getCurrentTask.assigned_to;
+        const task = taskStore.getCurrentTask;
+        const assignedIds = task.assigned_to || [];
         return assignedIds.map(id => contactStore.getContactInfoById(id))
             .filter(contact => contact !== null);
     }
@@ -70,7 +73,7 @@ const selectedPriority = ref(initialPriority.value);
 const selectedContacts = ref(initialContacts.value);
 const formSubtasks = ref(
     overlayStore.overlayMode === 'editTask'
-        ? taskStore.getCurrentTask.subtasks  // Pass complete subtask objects { title, done }
+        ? taskStore.getCurrentTask.subtasks
         : []
 );
 
@@ -140,10 +143,11 @@ const handleSubmit = async (values) => {
     }
 
     if (result.success) {
-        //TODO: Success message
+        const successMessage = overlayStore.overlayMode === 'createTask' ? 'Task created successfully!' : 'Task updated successfully!';
+        toastStore.showToast(successMessage);
         overlayStore.toggleOverlay();
     } else {
-        //TODO: Show error message from result.error
+        toastStore.showToast('Something went wrong, please try again.', 'error');
     }
 };
 

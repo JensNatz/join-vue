@@ -8,6 +8,25 @@
   scroll-behavior: smooth;
 }
 
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px; 
+}
+
+::-webkit-scrollbar-track {
+  background: $basic-white;  
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary-color-light ;    
+  border-radius: 4px;
+  
+  &:hover {
+    background: $primary-color; 
+  }
+}
+
 input {
   border: none;
   outline: none;

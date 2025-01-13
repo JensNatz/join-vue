@@ -1,4 +1,6 @@
-const FIREBASE_URL = "https://joinjens-default-rtdb.europe-west1.firebasedatabase.app/";
+import { getFirebaseUrl } from '@/services/securityService';
+
+const FIREBASE_URL = getFirebaseUrl();
 
 
 export async function loadFromDatabase(path) {

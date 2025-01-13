@@ -30,25 +30,38 @@
 </template>
 <script setup>
 import { computed } from 'vue';
-import { useContactStore } from '@/stores/contact';
-import { useOverlayStore } from '@/stores/overlay';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import IconArrowLeft from '@/components/icons/IconArrowLeft.vue';
 import IconDelete from '@/components/icons/IconDelete.vue';
+import { useContactStore } from '@/stores/contact';
+import { useOverlayStore } from '@/stores/overlay';
+import { useToastStore } from '@/stores/toast';
+import { useDialogStore } from '@/stores/dialog';
 
 const overlayStore = useOverlayStore();
 const contactStore = useContactStore();
-
+const toastStore = useToastStore();
+const dialogStore = useDialogStore();
 const contact = computed(() => contactStore.getContactInfoById(contactStore.currentContactId));
 
-const onDeleteContactClick = async () => {
-  const result = await contactStore.deleteContact(contactStore.currentContactId);
-  if (result.success) {
-    //TODO: toastmessage, die sagt "alles gut"
-  } else {
-    //TODO: toastmessage, die sagt "was schiefgelaufen"
-  }
+const onDeleteContactClick = () => {
+  dialogStore.showDialog({
+    title: 'Are you sure you want to delete this contact?',
+    subline: 'This action cannot be undone.',
+    onConfirm: async () => {
+      const result = await contactStore.deleteContact(contactStore.currentContactId);
+
+      if (result.success) {
+        toastStore.showToast('Contact deleted successfully!');
+      } else {
+        toastStore.showToast('Something went wrong, please try again.', 'error');
+      }
+    },
+    onCancel: () => {
+      dialogStore.hideDialog();
+    }
+  });
 };
 
 const onEditContactClick = () => {
@@ -61,7 +74,7 @@ const onBackClick = () => {
 };
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .contact-details-view {
   color: $basic-black;
   padding: 32px;

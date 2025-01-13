@@ -15,9 +15,9 @@
 </template>
 <script setup>
 import { RouterLink } from 'vue-router'
-import IconArrowLeft from '../icons/IconArrowLeft.vue'
+import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .static-template {
 
     padding: 24px;

@@ -23,7 +23,7 @@ const iconComponent = computed(() => ({
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .floating-action-button {
     @include flex();
     width: 64px;

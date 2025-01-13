@@ -4,12 +4,14 @@
 
 <script setup>
 import { ref, onBeforeMount } from 'vue';
+import ContactManagementForm from '@/components/organisms/ContactManagementForm.vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
-import ContactManagementForm from './ContactManagementForm.vue';
+import { useToastStore } from '@/stores/toast';
 
 const contactStore = useContactStore();
 const overlayStore = useOverlayStore();
+const toastStore = useToastStore();
 const localContactData = ref({});
 
 onBeforeMount(() => {
@@ -17,13 +19,12 @@ onBeforeMount(() => {
 });
 
 const handleSubmit = async (formData) => {
-    overlayStore.toggleOverlay();
     const result = await contactStore.updateContact(formData);
-
     if (result.success) {
-        //TODO: Success message
+        toastStore.showToast('Contact updated successfully!');
+        overlayStore.toggleOverlay();
     } else {
-        //TODO: Show error message from result.error
+        toastStore.showToast('Something went wrong, please try again.', 'error');
     }
 };
 </script>

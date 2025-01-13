@@ -11,7 +11,7 @@ const props = defineProps({
     }
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .alphabetical-header {
     @include flex($justify: start);
     width: 100%;

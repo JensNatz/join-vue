@@ -13,9 +13,10 @@
 </template>
 <script setup>
 import { computed } from 'vue';
+import AlphabeticalHeader from '@/components/molecules/AlphabeticalHeader.vue';
+import ContactEntry from '@/components/molecules/ContactEntry.vue';
 import { useContactStore } from '@/stores/contact';
-import AlphabeticalHeader from '../molecules/AlphabeticalHeader.vue';
-import ContactEntry from '../molecules/ContactEntry.vue';
+
 
 const contactStore = useContactStore();
 contactStore.fetchContacts();

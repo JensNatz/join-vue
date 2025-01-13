@@ -14,11 +14,11 @@ const onOverlayClick = () => {
     overlayStore.toggleOverlay();
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .theOverlay {
     @include flex($direction: column, $justify: start);
     position: fixed;
-    z-index: 1000;
+    z-index: 999;
     top: 0;
     left: 0;
     width: 100dvw;

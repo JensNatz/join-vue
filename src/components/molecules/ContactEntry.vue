@@ -31,7 +31,7 @@ const onContactClick = () => {
     contactStore.setCurrentContactId(props.contact.id);
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .contact-entry {
     @include flex($justify: start);
     cursor: pointer;

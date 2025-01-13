@@ -4,8 +4,8 @@
     </div>
 </template>
 <script setup>
-import { useOverlayStore } from '@/stores/overlay';
 import IconClose from '@/components/icons/IconClose.vue';
+import { useOverlayStore } from '@/stores/overlay';
 
 const props = defineProps({
     theme: {
@@ -21,7 +21,7 @@ const onCloseClick = () => {
     overlayStore.toggleOverlay();
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .close-icon {
     @include flex();
     cursor: pointer;

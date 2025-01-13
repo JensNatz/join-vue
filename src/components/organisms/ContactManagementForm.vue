@@ -26,14 +26,14 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { Form } from 'vee-validate'
 import IconLogoWhite from '@/components/icons/IconLogoWhite.vue';
 import InitialsBadge from '@/components/atoms/InitialsBadge.vue';
 import TheInput from '@/components/molecules/TheInput.vue';
 import TheButton from '@/components/atoms/TheButton.vue';
-import * as yup from 'yup';
-import { useOverlayStore } from '@/stores/overlay';
 import CloseButton from '@/components/molecules/CloseButton.vue';
+import { useOverlayStore } from '@/stores/overlay';
+import { Form } from 'vee-validate'
+import * as yup from 'yup';
 
 const overlayStore = useOverlayStore();
 
@@ -78,7 +78,7 @@ const onSubmit = async () => {
 
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .contact-management-form {
     @include flex();
     position: relative;

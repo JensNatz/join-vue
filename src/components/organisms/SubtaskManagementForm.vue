@@ -13,7 +13,8 @@
         <div class="subtask-list">
             <div class="subtask" v-for="(subtask, index) in subtasks" :key="index">
                 <input type="text" class="subtask-input" :value="subtask.title" :readonly="editingIndex !== index"
-                    :ref="el => subtaskInputs[index] = el" />
+                    :ref="el => subtaskInputs[index] = el"
+                    @keydown.enter.prevent.stop="onSaveClick(index, subtaskInputs[index].value)" />
                 <div class="subtask-controls">
                     <div class="input-controls" v-if="editingIndex !== index">
                         <IconEdit class="control-icon" @click="onEditClick(index)" />
@@ -35,7 +36,7 @@ import IconCheckmark from '@/components/icons/IconCheckmark.vue';
 import IconCancel from '@/components/icons/IconCancel.vue';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     subtasks: {

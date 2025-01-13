@@ -3,21 +3,22 @@
 </template>
 
 <script setup>
+import ContactManagementForm from './ContactManagementForm.vue';
 import { useContactStore } from '@/stores/contact';
 import { useOverlayStore } from '@/stores/overlay';
-import ContactManagementForm from './ContactManagementForm.vue';
+import { useToastStore } from '@/stores/toast';
 
 const contactStore = useContactStore();
 const overlayStore = useOverlayStore();
+const toastStore = useToastStore();
 
 const handleSubmit = async (formData) => {
-    overlayStore.toggleOverlay();
     const result = await contactStore.addContact(formData);
-
     if (result.success) {
-        //TODO: Success message
+        toastStore.showToast('Contact created successfully!');
+        overlayStore.toggleOverlay();
     } else {
-        //TODO: Show error message from result.error
+        toastStore.showToast('Something went wrong, please try again.', 'error');
     }
 };
 </script>

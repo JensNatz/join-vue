@@ -41,7 +41,7 @@ const numberOfCompletedSubtasks = computed(() => {
 });
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .subtasks-status-bar-wrapper {
     @include flex($justify: space-between);
     gap: 8px;
