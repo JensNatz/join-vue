@@ -1,9 +1,12 @@
 <template>
     <div class="the-input">
         <TheLabel v-if="label" :label="label" :htmlFor="name" :marksRequired="required" class="label" />
-        <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }"
-            :as="type === 'textarea' ? 'textarea' : 'input'" />
-        <component :is="iconComponent" class="input-icon" />
+        <div class="input-container">
+            <Field v-model="modelValue" :type="type" :name="name" :class="{ 'has-icon': props.icon }"
+                :as="type === 'textarea' ? 'textarea' : 'input'" :maxlength="maxLength" />
+            <component :is="iconComponent" class="input-icon" />
+        </div>
+        <div class="input-counter" v-if="maxLength">{{ inputLength }} / {{ maxLength }}</div>
         <ErrorMessage class="error-message" :name="name" />
     </div>
 </template>
@@ -65,6 +68,10 @@ const props = defineProps({
     rules: {
         type: [String, Array],
         required: false
+    },
+    maxLength: {
+        type: Number,
+        required: false
     }
 })
 
@@ -81,12 +88,14 @@ const iconComponent = computed(() => {
     }
 })
 
+const inputLength = computed(() => modelValue.value?.length || 0)
 
 </script>
 <style lang="scss" scoped>
 .the-input {
     position: relative;
     width: 100%;
+    padding-bottom: 20px;
 
     .label {
         display: block;
@@ -115,6 +124,10 @@ const iconComponent = computed(() => {
         border: 1px solid $basic-grey;
     }
 
+    .input-container {
+        position: relative;
+    }
+
     .input-icon {
         position: absolute;
         top: 50%;
@@ -125,8 +138,18 @@ const iconComponent = computed(() => {
     }
 
     .error-message {
+        position: absolute;
+        bottom: 0;
+        left: 0;
         color: $color-error;
         font-size: 14px;
+    }
+
+    .input-counter {
+        position: absolute;
+        bottom: 0px;
+        right: 16px;
+        font-size: 12px;
     }
 }
 </style>

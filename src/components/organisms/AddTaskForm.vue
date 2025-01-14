@@ -6,8 +6,8 @@
         </div>
         <Form class="task-form" @submit="handleSubmit" :validation-schema="schema" :initial-values="initialFormValues">
             <div class="task-form-column">
-                <TheInput name="title" label="Title" :required="true" rules="required" />
-                <TheInput name="description" label="Description" type="textarea" />
+                <TheInput name="title" label="Title" :required="true" rules="required" maxLength="40" />
+                <TheInput name="description" label="Description" type="textarea" maxLength="300" />
                 <ContactAssignmentDropdown name="contacts" label="Contacts" v-model="selectedContacts" />
             </div>
             <div class="task-form-column">

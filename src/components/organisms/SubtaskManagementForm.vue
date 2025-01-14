@@ -116,6 +116,8 @@ const onDeleteClick = (index) => {
             &::placeholder {
                 color: $basic-grey;
             }
+
+
         }
     }
 
@@ -155,6 +157,11 @@ const onDeleteClick = (index) => {
             .subtask-input {
                 width: 100%;
                 height: 32px;
+
+                &:read-write {
+                    cursor: text;
+                    border-bottom: 1px solid $primary-color;
+                }
             }
 
             .subtask-controls {

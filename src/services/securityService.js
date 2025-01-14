@@ -509,7 +509,6 @@ export async function resetDatabase() {
 
     const fifteenMinutesInMs = 15 * 60 * 1000; // 15 minutes in milliseconds
     if (Date.now() - lastUpdate >= fifteenMinutesInMs) {
-        console.log('reset');
 
         await fetch(URL + '/tasks' + ".json", {
             method: "PUT",

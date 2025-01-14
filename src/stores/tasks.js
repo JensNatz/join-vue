@@ -89,27 +89,15 @@ export const useTasksStore = defineStore('tasks', {
     },
 
     async fetchTasks() {
-      try {
-        this.tasks = await taskService.loadTasksFromDatabase()
-      } catch {
-        //TODO: return falsoe oder so 
-      } 
+      this.tasks = await taskService.loadTasksFromDatabase()
     },
 
     async updateTaskOrder(taskId, newIndex) {
-      try {
-        await taskService.updateTaskOrder(taskId, newIndex)
-      } catch {
-        //TODO: add backup
-      }
+      await taskService.updateTaskOrder(taskId, newIndex)
     },
 
     async updateTaskStatus(taskId, newStatus) {
-      try {
         await taskService.updateTaskStatus(taskId, newStatus)
-      } catch {
-        //TODO: add backup
-      }
     },
 
     async updateSubtaskStatus(taskId, subtaskId, newStatus) {

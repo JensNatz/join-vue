@@ -1,6 +1,5 @@
 <template>
     <div class="contacts-list">
-        <!-- TODO: suspense während kontakte geladen werden -->
         <div v-for="(contacts, letter) in sortedContacts" :key="letter">
             <div v-if="contacts.length > 0">
                 <AlphabeticalHeader :letter="letter" />

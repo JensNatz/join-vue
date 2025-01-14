@@ -11,9 +11,9 @@
                     <InitialsBadge class="badge" :name="contactData.name" size="large"
                         :colorCode="initialData.colorcode" />
                     <div class="contact-management-form-body-inputs">
-                        <TheInput name="name" icon="person" v-model="contactData.name" />
+                        <TheInput name="name" icon="person" v-model="contactData.name" :maxLength=40 />
                         <TheInput name="email" icon="email" type="email" v-model="contactData.email" />
-                        <TheInput name="phone" icon="phone" type="tel" v-model="contactData.phone" />
+                        <TheInput name="phone" icon="phone" type="tel" v-model="contactData.phone" :maxLength=30 />
                     </div>
                 </div>
                 <div class="contact-management-form-body-inputs-buttons">
@@ -83,7 +83,7 @@ const onSubmit = async () => {
     @include flex();
     position: relative;
     border-radius: 16px;
-    height: 420px;
+    height: 560px;
     width: 1000px;
 
     @media (max-width: $breakpoint-lg) {

@@ -30,6 +30,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 const contactStore = useContactStore();
 const taskStore = useTasksStore();
 const overlayStore = useOverlayStore();
+
 await Promise.all([
     contactStore.fetchContacts(),
     taskStore.fetchTasks()

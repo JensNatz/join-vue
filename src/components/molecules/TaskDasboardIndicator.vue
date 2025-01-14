@@ -2,7 +2,7 @@
     <div class="task-dashboard-indicator" :class="{ 'urgent': theme === 'urgent' }">
         <div class="header">
             <component :is="statusIcon" class="icon" />
-            <span class="number">{{ numberOFTasksInStatus }}</span>
+            <span class="number">{{ isLoading ? '-' : numberOFTasksInStatus }}</span>
         </div>
         <div class="content">
             <span class="title">{{ title }}</span>
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import IconTotalTasks from '@/components/icons/IconTotalTasks.vue';
 import IconTodo from '@/components/icons/IconTodo.vue';
 import IconProgress from '@/components/icons/IconProgress.vue';
@@ -21,7 +21,15 @@ import IconUrgent from '@/components/icons/IconUrgent.vue';
 import { useTasksStore } from '@/stores/tasks';
 
 const tasksStore = useTasksStore();
-tasksStore.fetchTasks();
+const isLoading = ref(true);
+
+const initializeTasks = async () => {
+    isLoading.value = true;
+    await tasksStore.fetchTasks();
+    isLoading.value = false;
+};
+
+initializeTasks();
 
 const props = defineProps({
     status: {
