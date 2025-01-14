@@ -87,6 +87,8 @@ const closeOptionsMenu = () => {
 <style lang="scss" scoped>
 .contacts-view {
   @include flex($align: start, $justify: start);
+  position: relative;
+  overflow-x: hidden;
 
   .contacts-list-container {
     @include flex($direction: column);
@@ -113,7 +115,7 @@ const closeOptionsMenu = () => {
     padding: 24px;
 
     @media (max-width: $breakpoint-md) {
-      position: absolute;
+      position: fixed;
       top: 80px;
       width: 100%;
       height: calc(100vh - 151px);

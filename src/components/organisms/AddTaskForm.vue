@@ -4,14 +4,17 @@
             <h1>{{ formTitle }}</h1>
             <CloseButton />
         </div>
-        <Form class="task-form" @submit="handleSubmit" :validation-schema="schema" :initial-values="initialFormValues">
+        <Form class="task-form" @submit="handleSubmit" :validation-schema="schema">
             <div class="task-form-column">
-                <TheInput name="title" label="Title" :required="true" rules="required" maxLength="40" />
-                <TheInput name="description" label="Description" type="textarea" maxLength="300" />
+                <TheInput name="title" label="Title" :required="true" rules="required" :maxLength="40"
+                    v-model="initialFormValues.title" />
+                <TheInput name="description" label="Description" type="textarea" :maxLength="300"
+                    v-model="initialFormValues.description" />
                 <ContactAssignmentDropdown name="contacts" label="Contacts" v-model="selectedContacts" />
             </div>
             <div class="task-form-column">
-                <TheInput name="dueDate" label="Due Date" type="date" :required="true" rules="required" />
+                <TheInput name="dueDate" label="Due Date" type="date" :required="true" rules="required"
+                    v-model="initialFormValues.dueDate" />
                 <div class="priority-buttons">
                     <PriorityButton class="priority-button" v-for="priority in priorities" :key="priority"
                         :priority="priority" :isSelected="selectedPriority === priority"
